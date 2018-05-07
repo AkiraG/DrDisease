@@ -48,7 +48,7 @@ public class Play extends BasicGameState implements InputProviderListener {
    
     @Override
     public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
-        guts.update(gc, sbg, delta); 
+        guts.update(gc, sbg, delta);
     }
     
     @Override
