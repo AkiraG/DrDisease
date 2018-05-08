@@ -23,6 +23,7 @@ public class Play extends BasicGameState implements InputProviderListener {
     
     public final int ID = 2;
     Player guts;
+    Boss firstBoss;
     private Command attack = new BasicCommand("attack");
     private Command moviment = new BasicCommand("moviment");
     InputProvider provider;
@@ -35,6 +36,8 @@ public class Play extends BasicGameState implements InputProviderListener {
     public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
         guts = new Player();
         guts.init(gc, sbg);
+        firstBoss = new Boss();
+        firstBoss.init(gc, sbg);
         provider = new InputProvider(gc.getInput());
         provider.addListener(this);
         provider.bindCommand(new KeyControl(Input.KEY_SPACE), attack);
@@ -43,12 +46,13 @@ public class Play extends BasicGameState implements InputProviderListener {
    
     @Override
     public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
-        guts.render(gc, sbg, g);    
+        guts.render(gc, sbg, g);  
+        firstBoss.render(gc, sbg, g);
     }
    
     @Override
     public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
-        guts.update(gc, sbg, delta); 
+        guts.update(gc, sbg, delta);
     }
     
     @Override

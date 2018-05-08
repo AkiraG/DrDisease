@@ -1,6 +1,7 @@
 package doctordisease;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import org.newdawn.slick.*;
 import org.newdawn.slick.command.BasicCommand;
@@ -45,18 +46,24 @@ public class Player {
         if (y < 0) y += y * -1 ;
         if (gc.getInput().isKeyDown(Input.KEY_DOWN)) y += 10;
         if (y > (768 - rec.getHeight())) y = (int) (768 - rec.getHeight());
-        if (gc.getInput().isKeyDown(Input.KEY_SPACE)) this.attack();
         rec.setX(x);
         rec.setY(y);
-        for (Tiro t : tiros){
-            t.update();
-        }      
         if (isOnCooldown) {
             cooldownTimer += delta;
             if (cooldownTimer > 200) {
                 isOnCooldown = false;
             }
         }
+        if (gc.getInput().isKeyDown(Input.KEY_SPACE)) this.attack();
+        for (Iterator<Tiro> iter = tiros.iterator();
+            iter.hasNext();){
+            Tiro t = iter.next();
+            if (t.y > 10)    t.update();
+            else {
+                t.bullet.setAutoUpdate(true);
+                if (t.bullet.isStopped()) iter.remove();   
+            }
+        }             
     }
     
     public void attack() throws SlickException{
