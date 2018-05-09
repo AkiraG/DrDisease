@@ -5,6 +5,7 @@
  */
 package doctordisease;
 
+import java.util.List;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -41,4 +42,17 @@ public class Tiro {
         y -= 15;
         hitbox.setY(y);
     }
+    
+    public void intersect(List<HitBoxBoss> hitboxBoss) throws SlickException {
+        if (this.hitbox.intersects(hitboxBoss.get(0).hitbox) || 
+            this.hitbox.intersects(hitboxBoss.get(1).hitbox) ||
+            this.hitbox.intersects(hitboxBoss.get(2).hitbox) ||
+            this.hitbox.intersects(hitboxBoss.get(3).hitbox) ||
+            y < 10){
+            this.bullet.setAutoUpdate(true);  
+        }
+        else{
+            this.update();
+        }
+    }    
 }
