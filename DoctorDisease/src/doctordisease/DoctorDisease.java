@@ -1,5 +1,6 @@
 package doctordisease;
 
+import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.newdawn.slick.AppGameContainer;
@@ -21,6 +22,8 @@ public class DoctorDisease extends StateBasedGame {
     }
     
     public static void main(String[] args) {
+        //System.setProperty("java.library.path", "libs");
+        //System.setProperty("org.lwjgl.librarypath", new File("libs/natives").getAbsolutePath());
         try
             {
 		app = new AppGameContainer(new DoctorDisease("Dr Disease"));

@@ -9,12 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.newdawn.slick.Animation;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.StateBasedGame;
 
 /**
@@ -28,6 +28,7 @@ public class Boss {
     static List<TiroBoss> bullets = new ArrayList <TiroBoss>();
     SpriteSheet blasterSheet;
     Image boss, core;
+    boolean onPause = false;
 
     public Boss() {
         hp = 1000;
@@ -67,23 +68,32 @@ public class Boss {
             rand = (int) (Math.random() * 4);
             if (blasters.get(rand).onAttack == false) {
                 blasters.get(rand).attack();
-                blasters.get(rand).onAttack = true;
             }
         }
         blasters.forEach(blasters -> {
-            if (blasters.blaster.getFrame() == 5 && blasters.onAttack) try {
-                Boss.bullets.add(new TiroBoss(blasters.x,blasters.y));
-                blasters.onAttack = false;
+            try {
+                blasters.update();
+                if (blasters.blaster.getFrame() == 5 && blasters.onAttack){
+                    Boss.bullets.add(new TiroBoss(blasters.x,blasters.y, blasters.ang));
+                    blasters.onAttack = false;
+                }    
             } catch (SlickException ex) {
                 Logger.getLogger(Boss.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
         bullets.forEach(bullets ->{
             try {
-                bullets.update();
+                bullets.intersect(Play.guts);
             } catch (SlickException ex) {
                 Logger.getLogger(Boss.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
-    }      
+        bullets.removeIf(bullets -> bullets.bullet.isStopped());
+    }
+    
+    public void pause() {
+        blasters.forEach(blasters -> {
+            blasters.blaster.setAutoUpdate(false);
+        });
+    }
 }

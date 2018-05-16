@@ -1,8 +1,9 @@
 package doctordisease;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.newdawn.slick.*;
 import org.newdawn.slick.command.BasicCommand;
 import org.newdawn.slick.geom.Rectangle;
@@ -62,7 +63,7 @@ public class Player {
             y -= 10;
             idle = false;
         }
-        if (y < 250) y += 10 ;
+        if (y < 0) y += 10 ;
         if (gc.getInput().isKeyDown(Input.KEY_DOWN)) {
             y += 10;
             idle = false;
@@ -90,12 +91,10 @@ public class Player {
             guts.restart();
             hand = false;
         }
-        for (Iterator<Tiro> iter = tiros.iterator();
-            iter.hasNext();){
-            Tiro t = iter.next();
-            t.intersect(Boss.blasters);
-            if (t.bullet.isStopped()) iter.remove();   
-            }
+        tiros.forEach(tiros -> {
+            tiros.update();
+        });
+        tiros.removeIf(tiros -> tiros.bullet.isStopped());
     }
     
     public void attack() throws SlickException{
@@ -107,5 +106,10 @@ public class Player {
             cooldownTimer = 0;
             if (guts.getFrame() == 5) guts.setCurrentFrame(2);
         }
-    }             
+    }
+    
+    public void pause() {
+        guts.setAutoUpdate(false);
+        propulsion.setAutoUpdate(false);
+    }
 }

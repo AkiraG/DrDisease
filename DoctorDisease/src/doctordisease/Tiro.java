@@ -5,7 +5,9 @@
  */
 package doctordisease;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
@@ -34,25 +36,27 @@ public class Tiro {
 
     public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
         g.drawAnimation(bullet, x, y);
-        //g.setColor(Color.transparent);
         g.draw(hitbox);
+        g.setColor(Color.transparent);
     }
 
-    public void update() throws SlickException {
-        y -= 15;
-        hitbox.setY(y);
+    public void update() { //Boss.blasters
+        if (bullet.getFrame()==0) {
+            if (y >= 15) y -= 15;
+            else y -= y;
+            hitbox.setY(y);
+            this.checkIntersect(Boss.blasters);
+        }
     }
     
-    public void intersect(List<HitBoxBoss> hitboxBoss) throws SlickException {
-        if (this.hitbox.intersects(hitboxBoss.get(0).hitbox) || 
-            this.hitbox.intersects(hitboxBoss.get(1).hitbox) ||
-            this.hitbox.intersects(hitboxBoss.get(2).hitbox) ||
-            this.hitbox.intersects(hitboxBoss.get(3).hitbox) ||
-            y < 10){
-            this.bullet.setAutoUpdate(true);  
-        }
-        else{
-            this.update();
-        }
-    }    
+    public void checkIntersect(List<HitBoxBoss> hitBoxBoss) {
+        for(Iterator<HitBoxBoss> iter = hitBoxBoss.iterator(); 
+            iter.hasNext();) {
+                HitBoxBoss hitboxAtual = iter.next();
+                if (hitbox.intersects(hitboxAtual.hitbox) || hitbox.intersects(Play.EDGE.get(0))) {
+                    bullet.setCurrentFrame(1);
+                    bullet.setAutoUpdate(true);
+                }
+        }        
+    }
 }
