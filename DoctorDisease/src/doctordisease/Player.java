@@ -1,6 +1,7 @@
 package doctordisease;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -54,6 +55,7 @@ public class Player {
             idle = false;
         }
         if (x < 0) x += x * -1 ;
+<<<<<<< HEAD
         if (gc.getInput().isKeyDown(Input.KEY_RIGHT)) {
             x += 10;
             idle = false;
@@ -77,12 +79,23 @@ public class Player {
         } else propulsion.setAutoUpdate(false);
         hitbox.setX(x);
         hitbox.setY(y);
+=======
+        if (gc.getInput().isKeyDown(Input.KEY_RIGHT)) x += 10;
+        if (x > (1024 - rec.getWidth())) x = (int) (1024 - rec.getWidth());
+        if (gc.getInput().isKeyDown(Input.KEY_UP)) y -= 10;
+        if (y < 0) y += y * -1 ;
+        if (gc.getInput().isKeyDown(Input.KEY_DOWN)) y += 10;
+        if (y > (768 - rec.getHeight())) y = (int) (768 - rec.getHeight());
+        rec.setX(x);
+        rec.setY(y);
+>>>>>>> 245a546bc6d93ed72e528f6a75289c65a054fc76
         if (isOnCooldown) {
             cooldownTimer += delta;
             if (cooldownTimer > 100) {
                 isOnCooldown = false;
             }
         }
+<<<<<<< HEAD
         if (gc.getInput().isKeyDown(Input.KEY_SPACE)) {
             this.attack();
             guts.setAutoUpdate(true);
@@ -95,6 +108,18 @@ public class Player {
             tiros.update();
         });
         tiros.removeIf(tiros -> tiros.bullet.isStopped());
+=======
+        if (gc.getInput().isKeyDown(Input.KEY_SPACE)) this.attack();
+        for (Iterator<Tiro> iter = tiros.iterator();
+            iter.hasNext();){
+            Tiro t = iter.next();
+            if (t.y > 10)    t.update();
+            else {
+                t.bullet.setAutoUpdate(true);
+                if (t.bullet.isStopped()) iter.remove();   
+            }
+        }             
+>>>>>>> 245a546bc6d93ed72e528f6a75289c65a054fc76
     }
     
     public void attack() throws SlickException{

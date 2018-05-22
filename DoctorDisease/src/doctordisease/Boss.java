@@ -5,6 +5,7 @@
  */
 package doctordisease;
 
+<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -15,6 +16,11 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.geom.Rectangle;
+=======
+import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.SlickException;
+>>>>>>> 245a546bc6d93ed72e528f6a75289c65a054fc76
 import org.newdawn.slick.state.StateBasedGame;
 
 /**
@@ -22,6 +28,7 @@ import org.newdawn.slick.state.StateBasedGame;
  * @author Gabriel
  */
 public class Boss {
+<<<<<<< HEAD
     
     int x, y, hp, time, rand;
     static List<HitBoxBoss> blasters = new ArrayList <HitBoxBoss>();
@@ -96,4 +103,19 @@ public class Boss {
             blasters.blaster.setAutoUpdate(false);
         });
     }
+=======
+
+    public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
+        
+    }
+
+    public void render(GameContainer gc, StateBasedGame sbg, Graphics grphcs) throws SlickException {
+        
+    }
+
+    public void update(GameContainer gc, StateBasedGame sbg, int i) throws SlickException {
+        
+    }
+    
+>>>>>>> 245a546bc6d93ed72e528f6a75289c65a054fc76
 }
