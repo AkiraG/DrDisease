@@ -20,6 +20,7 @@ public class Player {
     SpriteSheet gutsSheet, propulsionSheet;
     Animation guts, propulsion;
     boolean idle;
+    Sound gutsShot;
     
     public Player() {
         x = 512;
@@ -34,6 +35,7 @@ public class Player {
         propulsion = new Animation(propulsionSheet, 100);
         propulsion.setAutoUpdate(false);
         hitbox = new Rectangle(x, y, guts.getWidth(), guts.getHeight());
+        gutsShot = new Sound("data/sound/Fase01/Guts_shot.ogg");
     }
 
     public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
@@ -99,6 +101,7 @@ public class Player {
         if (isOnCooldown == false && guts.getFrame() >= 3 && guts.getFrame() < 6){
             if (hand == true)  tiros.add(new Tiro(x,y));
             if (hand == false) tiros.add(new Tiro((x + 40),y));
+            gutsShot.play();
             hand = !hand;
             isOnCooldown = true;
             cooldownTimer = 0;

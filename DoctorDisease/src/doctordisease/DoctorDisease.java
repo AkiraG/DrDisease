@@ -1,6 +1,5 @@
 package doctordisease;
 
-import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.newdawn.slick.AppGameContainer;
@@ -40,7 +39,9 @@ public class DoctorDisease extends StateBasedGame {
 
     @Override
     public void initStatesList(GameContainer gc) throws SlickException {
-        this.addState(new Play(0));
+        this.addState(new IntroState(0));
+        this.addState(new Menu(1));
+        this.addState(new Play(2));
         //this.enterState(1);
     }
     

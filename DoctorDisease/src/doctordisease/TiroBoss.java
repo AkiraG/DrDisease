@@ -5,6 +5,7 @@
  */
 package doctordisease;
 
+import java.util.Iterator;
 import java.util.List;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.GameContainer;
@@ -12,6 +13,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.geom.Circle;
+import org.newdawn.slick.geom.Line;
 import org.newdawn.slick.state.StateBasedGame;
 
 /**
@@ -55,9 +57,19 @@ public class TiroBoss {
     }
 
     public void update() throws SlickException {
-        x += targetX;
-        y += 10;
-        hitbox.setLocation(x + bullet.getCurrentFrame().getCenterOfRotationX(), y + bullet.getCurrentFrame().getCenterOfRotationY());
+        if (bullet.getFrame() == 0){
+            x += targetX;
+            y += 10;
+            hitbox.setLocation(x + bullet.getCurrentFrame().getCenterOfRotationX(), y + bullet.getCurrentFrame().getCenterOfRotationY());
+        }
+        for(Iterator<Line> iter = Play.EDGE.iterator(); 
+            iter.hasNext();) {
+                Line edge = iter.next();
+                if (hitbox.intersects(edge)) {
+                    bullet.setCurrentFrame(1);
+                    bullet.setAutoUpdate(true);
+                }
+        }
     }
     
     public void intersect(Player player) throws SlickException {

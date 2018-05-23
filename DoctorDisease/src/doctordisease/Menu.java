@@ -63,10 +63,9 @@ public class Menu extends BasicGameState {
                 } catch (Exception e) {
                 e.printStackTrace();
                 }
-        
-        bgMusic= new Music("/data/sound/Intro_Drop.ogg");
-        btClick= new Sound("/data/sound/Main_Menu_Select.ogg");
-        btReturn= new Sound("/data/sound/Main_Menu_Back.ogg");
+
+        btClick= new Sound("/data/sound/Menu/Main_Menu_Select.ogg");
+        btReturn= new Sound("/data/sound/Menu/Main_Menu_Back.ogg");
         
         // path pra imagem, posX, posY, valor do state, som do botão - isso pra botôes que alterem o state
         btStart = new Button("bt_start", 512, 500, 2, btClick, "state");
@@ -126,7 +125,7 @@ public class Menu extends BasicGameState {
                 break;
             case 2:
                 sbg.enterState(2);
-                bgMusic.stop();
+                DoctorDisease.gameState = 2;
                 break;
             case 3: // Quit - Fecha o jogo
                 DoctorDisease.gameRunning = false;

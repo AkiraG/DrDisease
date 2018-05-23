@@ -7,13 +7,13 @@ package doctordisease;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
-import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -23,12 +23,11 @@ public class Tiro {
     SpriteSheet bulletSheet;
     Animation bullet;
     Rectangle hitbox;
-    Circle tiro;
     
     public Tiro(int x, int y) throws SlickException {
         this.x = x;
         this.y = y;
-        tiro = new Circle(x, y, 10);
+        hitbox = new Rectangle(x + 3, y, 4,9);
         bulletSheet = new SpriteSheet("data/image/Fase01/bulletsSheet.png", 10, 10);
         bullet = new Animation(bulletSheet, 100);
         bullet.setAutoUpdate(false);

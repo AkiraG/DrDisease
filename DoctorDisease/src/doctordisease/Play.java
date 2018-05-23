@@ -28,7 +28,7 @@ public class Play extends BasicGameState implements InputProviderListener {
     Boss firstBoss;
     private Command esc = new BasicCommand("esc");
     InputProvider provider;
-    String message;
+    Image background;
     boolean pause = false;
    
     public Play(int state){    
@@ -47,11 +47,13 @@ public class Play extends BasicGameState implements InputProviderListener {
         provider = new InputProvider(gc.getInput());
         provider.addListener(this);
         provider.bindCommand(new KeyControl(Input.KEY_ESCAPE), esc);
+        background = new Image("data/image/Fase01/background-stomach.png");
     }
    
     @Override
     public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
         EDGE.forEach(EDGE -> g.draw(EDGE));
+        g.drawImage(background, 0, 0);
         firstBoss.render(gc, sbg, g);
         guts.render(gc, sbg, g);  
     }
@@ -75,11 +77,17 @@ public class Play extends BasicGameState implements InputProviderListener {
 
     @Override
     public void controlPressed(Command cmnd) {
-        if (cmnd.toString().contains("esc")) pause = !pause;
+        if (cmnd.toString().contains("esc")) {
+            pause = !pause;
+            if (pause == false) {
+                firstBoss.dispause();
+            }
+        }
     }
 
     @Override
     public void controlReleased(Command cmnd) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
+    
 }

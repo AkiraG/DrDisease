@@ -48,7 +48,8 @@ public class IntroState extends BasicGameState {
     public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
         switch(state){
             case 0:
-                logoTeam.drawCentered(512, 384);
+                logoTeam.draw(0, 0, 1024, 768);
+                //logoTeam.drawCentered(512, 384);
                 break;
             case 1:
                 logoFatec.drawCentered(512, 384);
@@ -65,12 +66,13 @@ public class IntroState extends BasicGameState {
        //if(!introDrop.playing())introDrop.play();
        if (DoctorDisease.gameRunning == false){
            DoctorDisease.gameRunning = true;
-           tMusic.start();
+           tMusic.begin();
        } 
+        System.out.println(delta);
        Input input=gc.getInput();
-       time+=delta;
-       if(state==0)if(input.isKeyPressed(KEY_ENTER)||time>1000)state=1;
-       if(state==1)if(input.isKeyPressed(KEY_ENTER)||time>2500)state=2;
+       time += delta;
+       if(state==0)if(input.isKeyPressed(KEY_ENTER)||time>1800) state=1;
+       if(state==1)if(input.isKeyPressed(KEY_ENTER)||time>3700) state=2;
        //if(state==2)if(input.isKeyPressed(KEY_ENTER)); NÃO CONSEGUI IMPLEMENTAR ISTO, CORTE DA INTRO (Flavio)
        if(intro.isStopped() && tr==false) {
            sbg.enterState(1,new FadeOutTransition(new Color (255,0,0)) ,new FadeInTransition(new Color (255,0,0)));
