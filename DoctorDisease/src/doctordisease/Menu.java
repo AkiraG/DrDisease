@@ -32,7 +32,7 @@ public class Menu extends BasicGameState {
     
     
     Celulas[] celulasLst = new Celulas [15];
-    Button btBack,btBack2, btStart, btOptions, btQuit, btLanguage, btSound, btTuto, btCred, btSobre;
+    Button btBack,btBackEng,btBack2,btBack2Eng, btStart,btStartEng, btOptions,btOptionsEng, btQuit,btQuitEng, btLanguage, btSound, btTuto, btCred,btCredEng, btAbout,btAboutEng;
     Button[] btList;
     
     static Sound btClick, btReturn;
@@ -52,7 +52,7 @@ public class Menu extends BasicGameState {
     @Override
     public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
         
-        //Set font
+        //configurando fonte usada
         try{
             InputStream inputStream = ResourceLoader.getResourceAsStream("/data/fonts/pixelart.ttf");
  
@@ -68,20 +68,27 @@ public class Menu extends BasicGameState {
         btReturn= new Sound("/data/sound/Menu/Main_Menu_Back.ogg");
         
         // path pra imagem, posX, posY, valor do state, som do botão - isso pra botôes que alterem o state
-        btStart = new Button("bt_start", 512, 500, 2, btClick, "state");
+        btStart = new Button("bt_start_pt", 512, 500, 2, btClick, "state");
+        btStartEng = new Button("bt_start_eng", 512, 500, 2, btClick, "state");
         btTuto = new Button("bt_tutorial",512,550,4,btClick,"state");
-        btOptions = new Button("bt_options", 512, 600, 1, btClick, "state");
-        btQuit = new Button("bt_quit", 512, 650, 3, btClick, "state");
-        btCred = new Button("bt_cred",100,700,5, btClick, "state");
-        btSobre = new Button("bt_sobre",924,700,6, btClick, "state");        
-        btBack = new Button("bt_back", 850, 650, 0, btReturn, "state");
-        btBack2 = new Button("bt_back",850,700,0,btReturn,"state");
+        btOptions = new Button("bt_options_pt", 512, 600, 1, btClick, "state");
+        btOptionsEng = new Button("bt_options_eng", 512, 600, 1, btClick, "state");
+        btQuit = new Button("bt_quit_pt", 512, 650, 3, btClick, "state");
+        btQuitEng = new Button("bt_quit_eng", 512, 650, 3, btClick, "state");
+        btCred = new Button("bt_credits_pt",100,700,5, btClick, "state");
+        btCredEng = new Button("bt_credits_eng",100,700,5, btClick, "state");
+        btAbout = new Button("bt_about_pt",924,700,6, btClick, "state");
+        btAboutEng = new Button("bt_about_eng",924,700,6, btClick, "state");
+        btBack = new Button("bt_back_pt", 850, 650, 0, btReturn, "state");
+        btBackEng = new Button("bt_back_eng", 850, 650, 0, btReturn, "state");
+        btBack2 = new Button("bt_back_pt",850,700,0,btReturn,"state");
+        btBack2Eng = new Button("bt_back_eng",850,700,0,btReturn,"state");
         // path para imagem, posX, posY, qual eh a var de controle a ser alterada, som do click - isso para botôes de controle
         // 1 para language e 2 para o som
-        btLanguage = new Button("language_options", 450, 550, 1, btClick, "control");
+        btLanguage = new Button("language_options", 450, 550, 1, btClick, "lang");
         btSound = new Button("sound_options", 650, 550, 2, btClick, "control");
         // criar os botoes na parte de cima e adiciona-los na lista
-        btList = new Button[] {btStart, btOptions, btQuit, btBack,btBack2, btLanguage, btSound, btTuto, btCred, btSobre};
+        btList = new Button[] {btStart,btStartEng, btOptions,btOptionsEng, btQuit,btQuitEng, btBack,btBack2,btBackEng, btBack2Eng, btLanguage, btSound, btTuto, btCred,btCredEng, btAbout,btAboutEng};
         for (Button b: btList)
             b.init(gc, sbg); // roda a lista e da o init dos botoes
         
@@ -108,21 +115,39 @@ public class Menu extends BasicGameState {
       
         switch (Button.estados[0]){
             case 0:
-                btStart.render(gc, sbg, g);
-                btTuto.render(gc, sbg, g);
-                btOptions.render(gc, sbg, g);
-                btCred.render(gc, sbg, g);
-                btSobre.render(gc, sbg, g);
-                btQuit.render(gc, sbg, g);  
+                if (Button.estados[1] == 0){
+                    btStart.render(gc, sbg, g);
+                    btTuto.render(gc, sbg, g);
+                    btOptions.render(gc, sbg, g);
+                    btCred.render(gc, sbg, g);
+                    btAbout.render(gc, sbg, g);
+                    btQuit.render(gc, sbg, g);}
+                else {
+                    btStartEng.render(gc, sbg, g);
+                    btTuto.render(gc, sbg, g);
+                    btOptionsEng.render(gc, sbg, g);
+                    btCredEng.render(gc, sbg, g);
+                    btAboutEng.render(gc, sbg, g);
+                    btQuitEng.render(gc, sbg, g);
+                }          
                 break;
             case 1:
-                g.drawImage(boxOption, 100, 400);
-                pixelFont.drawString(410, 520, "IDIOMA");
-                btLanguage.render(gc, sbg, g);
-                pixelFont.drawString(610, 520, "AUDIO");
-                btSound.render(gc, sbg, g);
-                btBack.render(gc, sbg, g); 
-                break;
+                if (Button.estados[1] == 0){
+                    g.drawImage(boxOption, 100, 400);
+                    pixelFont.drawString(410, 520, "IDIOMA");
+                    btLanguage.render(gc, sbg, g);
+                    pixelFont.drawString(610, 520, "AUDIO");
+                    btSound.render(gc, sbg, g);
+                    btBack.render(gc, sbg, g);}
+                else{
+                    g.drawImage(boxOption, 100, 400);
+                    pixelFont.drawString(410, 520, "LANGUAGE");
+                    btLanguage.render(gc, sbg, g);
+                    pixelFont.drawString(610, 520, "SOUND");
+                    btSound.render(gc, sbg, g);
+                    btBackEng.render(gc, sbg, g);}
+                                    
+                break;                
             case 2:
                 sbg.enterState(2);
                 DoctorDisease.gameState = 2;
@@ -132,34 +157,67 @@ public class Menu extends BasicGameState {
                 System.exit(0);
                 break;
             case 4: // Tutorial
-                g.drawImage(boxOption2, 62, 320);
-                g.drawImage(telaTutorial, 130, 400);
-                btBack2.render(gc, sbg, g);
+                if (Button.estados[1] == 0){
+                    g.drawImage(boxOption2, 62, 320);
+                    g.drawImage(telaTutorial, 130, 400);
+                    btBack2.render(gc, sbg, g);}
+                else{
+                    g.drawImage(boxOption2, 62, 320);
+                    g.drawImage(telaTutorial, 130, 400);
+                    btBack2Eng.render(gc, sbg, g);
+                } 
+                    
                 break;
             case 5: // Creditos
-                g.drawImage(boxOption2, 62, 320);
-                pixelFont.drawString(130, 430,"PROGRAMACAO");
-                pixelFont.drawString(150,460 , "Flavio Alves. Grabriel Faggione");
-                pixelFont.drawString(130, 490, "ARTE e DESIGN");
-                pixelFont.drawString(150, 520, "George Dourado");
-                pixelFont.drawString(130, 550, "OST . EFEITOS SONOROS");
-                pixelFont.drawString(150, 580, "Alexander Rodrigues");
-                pixelFont.drawString(130, 610, "ROTEIRO");
-                pixelFont.drawString(150, 640, "Jose Roberto Calderon");
-                pixelFont.drawString(130, 670, "PRODUCAO");
-                pixelFont.drawString(150, 700, "Flavio Alves. George Dourado");
-                btBack2.render(gc, sbg, g);
+                if (Button.estados[1] == 0){
+                    g.drawImage(boxOption2, 62, 320);
+                    pixelFont.drawString(130, 430,"PROGRAMACAO");
+                    pixelFont.drawString(150,460 , "Flavio Alves. Grabriel Faggione");
+                    pixelFont.drawString(130, 490, "ARTE e DESIGN");
+                    pixelFont.drawString(150, 520, "George Dourado");
+                    pixelFont.drawString(130, 550, "OST . EFEITOS SONOROS");
+                    pixelFont.drawString(150, 580, "Alexander Rodrigues");
+                    pixelFont.drawString(130, 610, "ROTEIRO");
+                    pixelFont.drawString(150, 640, "Jose Roberto Calderon");
+                    pixelFont.drawString(130, 670, "PRODUCAO");
+                    pixelFont.drawString(150, 700, "Flavio Alves. George Dourado");
+                    btBack2.render(gc, sbg, g);}
+                else {
+                    g.drawImage(boxOption2, 62, 320);
+                    pixelFont.drawString(130, 430,"PROGRAM");
+                    pixelFont.drawString(150,460 , "Flavio Alves. Grabriel Faggione");
+                    pixelFont.drawString(130, 490, "ART and DESIGN");
+                    pixelFont.drawString(150, 520, "George Dourado. Jose R. Calderon");
+                    pixelFont.drawString(130, 550, "OST . SOUND EFFECTS");
+                    pixelFont.drawString(150, 580, "Alexander Rodrigues");
+                    pixelFont.drawString(130, 610, "SCRIPT");
+                    pixelFont.drawString(150, 640, "Jose Roberto Calderon");
+                    pixelFont.drawString(130, 670, "PRODUCTION");
+                    pixelFont.drawString(150, 700, "Flavio Alves. George Dourado");
+                    btBack2Eng.render(gc, sbg, g);
+                }
                 break;
             case 6:// botao sobre
+                if (Button.estados[1] == 0){
                 g.drawImage(boxOption2, 62, 320);
-                pixelFont.drawString(130, 430,"Doctor Disease e um game do genero Bullet Hell");
-                pixelFont.drawString(130, 450,"onde o jogador trava batalhas contra doencas");
-                pixelFont.drawString(130, 470,"dentro do corpo humano");
-                pixelFont.drawString(130, 510,"Este game foi desenvolvido como projeto de conclusao do");
-                pixelFont.drawString(130, 530,"3o Semestre da diciplina de Tecnologia em Jogos Digitais");
-                pixelFont.drawString(130, 550,"da Faculdade de Tecnologia de Carapicuiba");
-                pixelFont.drawString(130, 580,"Classificacao Indicativa 10 anos");
-                btBack2.render(gc, sbg, g);
+                    pixelFont.drawString(130, 430,"Doctor Disease e um game do genero Bullet Hell");
+                    pixelFont.drawString(130, 450,"onde o jogador trava batalhas contra doencas");
+                    pixelFont.drawString(130, 470,"dentro do corpo humano");
+                    pixelFont.drawString(130, 510,"Este game foi desenvolvido como projeto de conclusao do");
+                    pixelFont.drawString(130, 530,"3o Semestre do Curso de Tecnologia em Jogos Digitais");
+                    pixelFont.drawString(130, 550,"da Faculdade de Tecnologia de Carapicuiba");
+                    pixelFont.drawString(130, 580,"Classificacao Indicativa 10 anos");
+                    btBack2.render(gc, sbg, g);}
+                else{
+                    pixelFont.drawString(130, 430,"Doctor Disease is a game of the genre Bullet Hell");
+                    pixelFont.drawString(130, 450,"where the player fights battles against diseases");
+                    pixelFont.drawString(130, 470,"inside the human body");
+                    pixelFont.drawString(130, 510,"This game was developed as a project to conclude the");
+                    pixelFont.drawString(130, 530,"3th Semester of the Technology in Digital Games course");
+                    pixelFont.drawString(130, 550,"of the Carapicuiba Technology College");
+                    pixelFont.drawString(130, 580,"Indicative Classification 10 years");
+                    btBack2Eng.render(gc, sbg, g);
+                }
                 break;
            
         }       

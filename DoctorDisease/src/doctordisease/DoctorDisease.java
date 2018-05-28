@@ -26,7 +26,7 @@ public class DoctorDisease extends StateBasedGame {
         try
             {
 		app = new AppGameContainer(new DoctorDisease("Dr Disease"));
-		app.setDisplayMode(WIDTH, HEIGHT, true);
+		app.setDisplayMode(WIDTH, HEIGHT, false);
                 app.setTargetFrameRate(FPS);
 		app.start();
                 

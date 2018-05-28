@@ -38,6 +38,7 @@ public class Button {
     }    
 
     public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
+        
         buttonImg = new Image[] {new Image("/data/image/MainMenu/"+path+"1.png"), new Image("data/image/MainMenu/"+path+"2.png")};
         imgButton = buttonImg[0];
         if (type == "state"){
@@ -63,6 +64,26 @@ public class Button {
                     else {
                         button.setNormalImage(buttonImg[1]);
                         button.setMouseOverImage(buttonImg[1]);
+                    }
+                }      
+            }); 
+        }
+        if (type == "lang"){
+            button = new MouseOverArea(gc, imgButton, x - (buttonImg[0].getWidth()/2), y, buttonImg[0].getWidth(), buttonImg[0].getHeight(),  new ComponentListener() {            
+                @Override            
+                public void componentActivated(AbstractComponent arg0) {
+                    estados[var] += 1;
+                    if (estados[var] > 1) estados[var] = 0;
+
+                    if (estados[var] == 0) {
+                        button.setNormalImage(buttonImg[0]);
+                        button.setMouseOverImage(buttonImg[0]);
+                        Button.estados[1] = 0;
+                    }
+                    else {
+                        button.setNormalImage(buttonImg[1]);
+                        button.setMouseOverImage(buttonImg[1]);
+                        Button.estados[1] = 1;
                     }
                 }      
             }); 
