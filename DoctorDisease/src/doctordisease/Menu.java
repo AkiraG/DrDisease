@@ -54,7 +54,7 @@ public class Menu extends BasicGameState {
         
         //configurando fonte usada
         try{
-            InputStream inputStream = ResourceLoader.getResourceAsStream("/data/fonts/pixelart.ttf");
+            InputStream inputStream = ResourceLoader.getResourceAsStream("/data/fonts/amiga4ever_pro2.ttf");
  
 			Font font = Font.createFont(Font.TRUETYPE_FONT, inputStream);
 			font = font.deriveFont(20f); // set font size
@@ -171,7 +171,7 @@ public class Menu extends BasicGameState {
             case 5: // Creditos
                 if (Button.estados[1] == 0){
                     g.drawImage(boxOption2, 62, 320);
-                    pixelFont.drawString(130, 430,"PROGRAMACAO");
+                    pixelFont.drawString(130, 430,"PROGRAMAÇÃO");
                     pixelFont.drawString(150,460 , "Flavio Alves. Grabriel Faggione");
                     pixelFont.drawString(130, 490, "ARTE e DESIGN");
                     pixelFont.drawString(150, 520, "George Dourado");
@@ -179,8 +179,8 @@ public class Menu extends BasicGameState {
                     pixelFont.drawString(150, 580, "Alexander Rodrigues");
                     pixelFont.drawString(130, 610, "ROTEIRO");
                     pixelFont.drawString(150, 640, "Jose Roberto Calderon");
-                    pixelFont.drawString(130, 670, "PRODUCAO");
-                    pixelFont.drawString(150, 700, "Flavio Alves. George Dourado");
+                    pixelFont.drawString(130, 670, "PRODUÇÃO");
+                    pixelFont.drawString(150, 700, "Flávio Alves. George Dourado");
                     btBack2.render(gc, sbg, g);}
                 else {
                     g.drawImage(boxOption2, 62, 320);
@@ -199,23 +199,26 @@ public class Menu extends BasicGameState {
                 break;
             case 6:// botao sobre
                 if (Button.estados[1] == 0){
-                g.drawImage(boxOption2, 62, 320);
-                    pixelFont.drawString(130, 430,"Doctor Disease e um game do genero Bullet Hell");
-                    pixelFont.drawString(130, 450,"onde o jogador trava batalhas contra doencas");
-                    pixelFont.drawString(130, 470,"dentro do corpo humano");
-                    pixelFont.drawString(130, 510,"Este game foi desenvolvido como projeto de conclusao do");
-                    pixelFont.drawString(130, 530,"3o Semestre do Curso de Tecnologia em Jogos Digitais");
-                    pixelFont.drawString(130, 550,"da Faculdade de Tecnologia de Carapicuiba");
-                    pixelFont.drawString(130, 580,"Classificacao Indicativa 10 anos");
+                    g.drawImage(boxOption2, 62, 320);
+                    pixelFont.drawString(130, 430,"Doctor Disease e um game do genero Bullet");
+                    pixelFont.drawString(130, 450,"Hell onde o jogador trava batalhas contra");
+                    pixelFont.drawString(130, 470,"doenças dentro do corpo humano");
+                    pixelFont.drawString(130, 510,"Este game foi desenvolvido como projeto de");
+                    pixelFont.drawString(130, 530,"conclusão do 3o Semestre do Curso de");
+                    pixelFont.drawString(130, 550,"Tecnologia em Jogos Digitaisda Faculdade de");
+                    pixelFont.drawString(130, 580,"Tecnologia de Carapicuiba.");
+                    pixelFont.drawString(130, 640,"Classificação Indicativa 10 anos");                    
                     btBack2.render(gc, sbg, g);}
                 else{
-                    pixelFont.drawString(130, 430,"Doctor Disease is a game of the genre Bullet Hell");
-                    pixelFont.drawString(130, 450,"where the player fights battles against diseases");
-                    pixelFont.drawString(130, 470,"inside the human body");
-                    pixelFont.drawString(130, 510,"This game was developed as a project to conclude the");
-                    pixelFont.drawString(130, 530,"3th Semester of the Technology in Digital Games course");
-                    pixelFont.drawString(130, 550,"of the Carapicuiba Technology College");
-                    pixelFont.drawString(130, 580,"Indicative Classification 10 years");
+                    g.drawImage(boxOption2, 62, 320);
+                    pixelFont.drawString(130, 430,"Doctor Disease is a game of the genre Bullet");
+                    pixelFont.drawString(130, 450,"Hell where the player fights battles against");
+                    pixelFont.drawString(130, 470,"diseases inside the human body");
+                    pixelFont.drawString(130, 510,"This game was developed as a project to");
+                    pixelFont.drawString(130, 530,"conclude the 3th Semester of the Technology in");
+                    pixelFont.drawString(130, 550,"Digital Games course of the Carapicuiba");
+                    pixelFont.drawString(130, 580,"Technology College");
+                    pixelFont.drawString(130, 640,"Indicative Classification 10 years");
                     btBack2Eng.render(gc, sbg, g);
                 }
                 break;
