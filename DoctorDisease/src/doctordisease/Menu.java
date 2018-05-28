@@ -215,8 +215,8 @@ public class Menu extends BasicGameState {
                     pixelFont.drawString(130, 450,"Hell where the player fights battles against");
                     pixelFont.drawString(130, 470,"diseases inside the human body");
                     pixelFont.drawString(130, 510,"This game was developed as a project to");
-                    pixelFont.drawString(130, 530,"conclude the 3th Semester of the Technology in");
-                    pixelFont.drawString(130, 550,"Digital Games course of the Carapicuiba");
+                    pixelFont.drawString(130, 530,"conclude the 3th Semester of the Technology ");
+                    pixelFont.drawString(130, 550,"in Digital Games course of the Carapicuiba");
                     pixelFont.drawString(130, 580,"Technology College");
                     pixelFont.drawString(130, 640,"Indicative Classification 10 years");
                     btBack2Eng.render(gc, sbg, g);
