@@ -37,10 +37,10 @@ public class IntroState extends BasicGameState {
         state=0;
         logoTeam = new Image("/data/image/intro/logo_team.png");
         logoFatec = new Image("/data/image/intro/logo_fatec.png");
-        imgIntro = new SpriteSheet("/data/image/intro/intro.png",470,320);
-        intro= new Animation(imgIntro,130);
-        intro.setAutoUpdate(true);
-        intro.stopAt(30);
+//        imgIntro = new SpriteSheet("/data/image/intro/intro.png",470,320);
+//        intro= new Animation(imgIntro,130);
+//        intro.setAutoUpdate(true);
+//        intro.stopAt(30);
         //tMusic.start();
     }
 
@@ -55,7 +55,7 @@ public class IntroState extends BasicGameState {
                 logoFatec.drawCentered(512, 384);
                 break;
             case 2:
-                intro.draw(512-(intro.getWidth()/2),384-(intro.getHeight()/2));
+//                intro.draw(512-(intro.getWidth()/2),384-(intro.getHeight()/2));
                 break;
         }
         
@@ -74,7 +74,7 @@ public class IntroState extends BasicGameState {
        if(state==0)if(input.isKeyPressed(KEY_ENTER)||time>1800) state=1;
        if(state==1)if(input.isKeyPressed(KEY_ENTER)||time>3700) state=2;
        //if(state==2)if(input.isKeyPressed(KEY_ENTER)); NÃO CONSEGUI IMPLEMENTAR ISTO, CORTE DA INTRO (Flavio)
-       if(intro.isStopped() && tr==false) {
+       if(state==2 && tr==false) {
            sbg.enterState(1,new FadeOutTransition(new Color (255,0,0)) ,new FadeInTransition(new Color (255,0,0)));
            tr=!tr;
        }
