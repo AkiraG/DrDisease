@@ -38,10 +38,10 @@ public class BossCore extends BossConcept {
     }
     
     public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
-        coreIntro1 = new Animation(new SpriteSheet("data/image/Fase01/core-1-1-intro-pt1.png", 128, 128), 100);
+        coreIntro1 = new Animation(new SpriteSheet("data/image/Fase01/core-1-1-intro-pt1.png", 128, 128), 10);
         coreIntro1.stopAt(61);
 
-        coreIntro2 = new Animation(new SpriteSheet("data/image/Fase01/core-1-1-intro-pt2.png", 128, 128), 100);
+        coreIntro2 = new Animation(new SpriteSheet("data/image/Fase01/core-1-1-intro-pt2.png", 128, 128), 10);
         coreIntro2.stopAt(7);
         
         coreIdle = new Animation(new SpriteSheet("data/image/Fase01/core-1-1-idle.png", 128, 128), 100);
@@ -70,7 +70,7 @@ public class BossCore extends BossConcept {
     public void render(Graphics g) throws SlickException {
         g.drawAnimation(animAtual[status], x, y);
     }
-
+    
     public void update(int delta) throws SlickException {
         time += delta;
         

@@ -49,10 +49,10 @@ public class Tiro {
         }
     }
     
-    public void checkIntersect(List<HitBoxBoss> hitBoxBoss) {
-        for(Iterator<HitBoxBoss> iter = hitBoxBoss.iterator(); 
+    public void checkIntersect(List<BossBlaster> hitBoxBoss) {
+        for(Iterator<BossBlaster> iter = hitBoxBoss.iterator(); 
             iter.hasNext();) {
-                HitBoxBoss hitboxAtual = iter.next();
+                BossBlaster hitboxAtual = iter.next();
                 if (hitbox.intersects(hitboxAtual.hitbox) || hitbox.intersects(Play.EDGE.get(0))) {
                     bullet.setCurrentFrame(1);
                     bullet.setAutoUpdate(true);

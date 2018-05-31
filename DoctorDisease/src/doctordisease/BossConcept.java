@@ -12,19 +12,17 @@ import org.newdawn.slick.SlickException;
  *
  * @author Gabriel
  */
-public class BossConcept {
+public abstract class  BossConcept {
     
     int x, y;
     
     public void init() throws SlickException {
     }
     
-    public void update() throws SlickException {
-        
+    public void update(int delta) throws SlickException {
     }
     
     public void render(Graphics g) throws SlickException {
-        
     }
     
 }

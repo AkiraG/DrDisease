@@ -5,6 +5,7 @@ import java.util.List;
 import org.newdawn.slick.*;
 import org.newdawn.slick.command.BasicCommand;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.*;
 
 public class Player {
@@ -21,6 +22,7 @@ public class Player {
     Animation guts, propulsion;
     boolean idle;
     Sound gutsShot;
+    Vector2f vec;
     
     public Player() {
         x = 512;
@@ -75,8 +77,8 @@ public class Player {
                 propulsion.restart();
             }
         } else propulsion.setAutoUpdate(false);
-        hitbox.setX(x);
-        hitbox.setY(y);
+        vec = new Vector2f(x, y);
+        hitbox.setLocation(vec);
         if (isOnCooldown) {
             cooldownTimer += delta;
             if (cooldownTimer > 100) {

@@ -66,7 +66,7 @@ public class Play extends BasicGameState implements InputProviderListener {
         }
         else {
             guts.pause();
-            firstBoss.pause();
+            //firstBoss.pause();
         }
     }
     
@@ -80,7 +80,7 @@ public class Play extends BasicGameState implements InputProviderListener {
         if (cmnd.toString().contains("esc")) {
             pause = !pause;
             if (pause == false) {
-                firstBoss.dispause();
+               // firstBoss.dispause();
             }
         }
     }

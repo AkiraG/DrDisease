@@ -27,16 +27,18 @@ public class BossBody extends BossConcept {
     
     public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
         sheetBodyIntro = new SpriteSheet("data/image/Fase01/body-1-1-intro.png", 616, 208);
-        bodyIntro = new Animation(sheetBodyIntro, 100);
+        bodyIntro = new Animation(sheetBodyIntro, 10);
         bodyIntro.stopAt(41);
         x = 240;
     }
 
+    @Override
     public void render(Graphics g) throws SlickException {
         g.drawAnimation(bodyIntro, x, y);
     }
 
-    public void update() throws SlickException {
+    @Override
+    public void update(int delta) throws SlickException {
     }
     
 }

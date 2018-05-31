@@ -1,5 +1,6 @@
 package doctordisease;
 
+import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.newdawn.slick.AppGameContainer;
@@ -21,13 +22,13 @@ public class DoctorDisease extends StateBasedGame {
     }
     
     public static void main(String[] args) {
-        //System.setProperty("java.library.path", "libs");
-        //System.setProperty("org.lwjgl.librarypath", new File("libs/natives").getAbsolutePath());
+        System.setProperty("java.library.path", "libs");
+        System.setProperty("org.lwjgl.librarypath", new File("libs/natives").getAbsolutePath());
         try
             {
 		app = new AppGameContainer(new DoctorDisease("Dr Disease"));
 		app.setDisplayMode(WIDTH, HEIGHT, false);
-                app.setTargetFrameRate(FPS);
+                //app.setTargetFrameRate(FPS);
 		app.start();
                 
             }
@@ -42,7 +43,7 @@ public class DoctorDisease extends StateBasedGame {
         this.addState(new IntroState(0));
         this.addState(new Menu(1));
         this.addState(new Play(2));
-        //this.enterState(1);
+        this.enterState(2);
     }
     
 }
