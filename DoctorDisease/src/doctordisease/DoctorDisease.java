@@ -43,7 +43,7 @@ public class DoctorDisease extends StateBasedGame {
         this.addState(new IntroState(0));
         this.addState(new Menu(1));
         this.addState(new Play(2));
-        this.enterState(2);
+        this.enterState(1);
     }
     
 }

@@ -6,6 +6,7 @@
 package doctordisease;
 
 import java.util.Iterator;
+import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
@@ -55,6 +56,7 @@ public class BossBullet {
 
     public void update(int delta, Player p) throws SlickException {
         System.out.println(pos.getTheta());
+        System.out.println(GL11.glGetInteger(GL11.GL_MAX_TEXTURE_SIZE));
         if (bullet.getFrame() == 0){
             Vector2f realSpeed = speed.copy();
             realSpeed.scale( (delta / 500.0f) );

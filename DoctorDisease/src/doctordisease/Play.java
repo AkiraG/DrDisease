@@ -60,6 +60,7 @@ public class Play extends BasicGameState implements InputProviderListener {
    
     @Override
     public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
+        
         if (pause == false){
             guts.update(gc, sbg, delta);
             firstBoss.update(gc, sbg, ID);

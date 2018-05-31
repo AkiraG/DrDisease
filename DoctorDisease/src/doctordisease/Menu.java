@@ -26,7 +26,7 @@ import org.newdawn.slick.util.ResourceLoader;
  */
 public class Menu extends BasicGameState {
     
-    Image background, boxOption, boxOption2,telaTutorial;
+    Image background, boxOption, boxOption2,telaTutorial,telaTutorialEng;
     Image[] logoGame = new Image[8];    
     Animation logo = new Animation(logoGame, 2);
     
@@ -85,7 +85,7 @@ public class Menu extends BasicGameState {
         btBack2Eng = new Button("bt_back_eng",850,700,0,btReturn,"state");
         // path para imagem, posX, posY, qual eh a var de controle a ser alterada, som do click - isso para botôes de controle
         // 1 para language e 2 para o som
-        btLanguage = new Button("language_options", 450, 550, 1, btClick, "lang");
+        btLanguage = new Button("language_options", 375, 550, 1, btClick, "lang");
         btSound = new Button("sound_options", 650, 550, 2, btClick, "control");
         // criar os botoes na parte de cima e adiciona-los na lista
         btList = new Button[] {btStart,btStartEng, btOptions,btOptionsEng, btQuit,btQuitEng, btBack,btBack2,btBackEng, btBack2Eng, btLanguage, btSound, btTuto, btCred,btCredEng, btAbout,btAboutEng};
@@ -100,7 +100,8 @@ public class Menu extends BasicGameState {
         background = new Image("data/image/MainMenu/background.png");
         boxOption = new Image("data/image/MainMenu/box_options.png");
         boxOption2 = new Image("data/image/MainMenu/box_options2.png");// box usado para creditos tamanho alterado
-        telaTutorial = new Image("data/image/MainMenu/tela_tutorial.png");
+        telaTutorial = new Image("data/image/MainMenu/tela_tutorialpt.png");
+        telaTutorialEng = new Image("data/image/MainMenu/tela_tutorialeng.png");
         
         for (int x = 0 ; x < 15 ; x++){
             celulasLst[x] = new Celulas();
@@ -134,16 +135,16 @@ public class Menu extends BasicGameState {
             case 1:
                 if (Button.estados[1] == 0){
                     g.drawImage(boxOption, 100, 400);
-                    pixelFont.drawString(410, 520, "IDIOMA");
+                    pixelFont.drawString(375-(pixelFont.getWidth("IDIOMA")/2), 520, "IDIOMA");
                     btLanguage.render(gc, sbg, g);
-                    pixelFont.drawString(610, 520, "AUDIO");
+                    pixelFont.drawString(650-(pixelFont.getWidth("AUDIO")/2), 520, "AUDIO");
                     btSound.render(gc, sbg, g);
                     btBack.render(gc, sbg, g);}
                 else{
                     g.drawImage(boxOption, 100, 400);
-                    pixelFont.drawString(410, 520, "LANGUAGE");
+                    pixelFont.drawString(375-(pixelFont.getWidth("LANGUAGE")/2), 520, "LANGUAGE");
                     btLanguage.render(gc, sbg, g);
-                    pixelFont.drawString(610, 520, "SOUND");
+                    pixelFont.drawString(650-(pixelFont.getWidth("SOUND")/2), 520, "SOUND");
                     btSound.render(gc, sbg, g);
                     btBackEng.render(gc, sbg, g);}
                                     
@@ -157,13 +158,16 @@ public class Menu extends BasicGameState {
                 System.exit(0);
                 break;
             case 4: // Tutorial
-                if (Button.estados[1] == 0){
+                if (Button.estados[1] == 0){                    
                     g.drawImage(boxOption2, 62, 320);
-                    g.drawImage(telaTutorial, 130, 400);
-                    btBack2.render(gc, sbg, g);}
-                else{
+                    g.drawImage(telaTutorial, 230, 400);                    
+                    btBack2.render(gc, sbg, g);
+                    pixelFont.drawString(512-(pixelFont.getWidth("CONTROLES")/2), 450, "CONTROLES");
+                }
+                else{                    
                     g.drawImage(boxOption2, 62, 320);
-                    g.drawImage(telaTutorial, 130, 400);
+                    g.drawImage(telaTutorialEng, 230, 400);
+                    pixelFont.drawString(512-(pixelFont.getWidth("CONTROLS")/2), 450, "CONTROLS");
                     btBack2Eng.render(gc, sbg, g);
                 } 
                     
@@ -200,13 +204,13 @@ public class Menu extends BasicGameState {
             case 6:// botao sobre
                 if (Button.estados[1] == 0){
                     g.drawImage(boxOption2, 62, 320);
-                    pixelFont.drawString(130, 430,"Doctor Disease e um game do genero Bullet");
+                    pixelFont.drawString(130, 430,"Doctor Disease é um game do gênero Bullet");
                     pixelFont.drawString(130, 450,"Hell onde o jogador trava batalhas contra");
                     pixelFont.drawString(130, 470,"doenças dentro do corpo humano");
                     pixelFont.drawString(130, 510,"Este game foi desenvolvido como projeto de");
                     pixelFont.drawString(130, 530,"conclusão do 3o Semestre do Curso de");
-                    pixelFont.drawString(130, 550,"Tecnologia em Jogos Digitaisda Faculdade de");
-                    pixelFont.drawString(130, 580,"Tecnologia de Carapicuiba.");
+                    pixelFont.drawString(130, 550,"Tecnologia em Jogos Digitais da Faculdade");
+                    pixelFont.drawString(130, 580,"de Tecnologia de Carapicuiba.");
                     pixelFont.drawString(130, 640,"Classificação Indicativa 10 anos");                    
                     btBack2.render(gc, sbg, g);}
                 else{
