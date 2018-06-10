@@ -6,170 +6,209 @@
 package doctordisease;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Point;
+import org.newdawn.slick.geom.Shape;
+import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
+
 
 /**
  *
  * @author Gabriel
  */
 public class Boss {
+    Color renderColor;
     
+    Shape targetHitbox;
     
+    float hp,coreDamage,bodyDamage,blasterDamage;
+    boolean isAtk,isCoreAtk;
+    String typeAtk;
+    float targetAngle;
     
-    final int idle = 0, randomBullets = 1, comboBullets = 2;
-    int x, y, hp, rand, attack;
-    double time = 1, lastTime = 10;
+    int time,cdAtk,repeatAtk;
     
-    static List<BossBlaster> blasters = new ArrayList <BossBlaster>();
-    static List<BossBullet> bullets = new ArrayList <BossBullet>();
+    ArrayList<BossConcept> partList;
+    ArrayList<BossBlaster> blasterList;
+    ArrayList<Projectile> shootList;
     
-    BossBody body;
+    Point location;
+    Vector2f direction;
+    
     BossCore core;
-    List<BossConcept> boss = new ArrayList <>();
+    BossBody body;
     
-    boolean onPause = false;
-    boolean onIntro = true;
+    BossBlaster blaster01;
+    BossBlaster blaster02;
+    BossBlaster blaster03;
+    BossBlaster blaster04;
+
+    public Boss(Point location) {
+        
+        renderColor = new Color(255,0,0,255);
+        
+        hp=1200;
+        coreDamage=5f;
+        bodyDamage=0.1f;
+        blasterDamage=1f;
+        
+        time=0;
+        cdAtk=100;
+        isAtk=false;
+        isCoreAtk=true;
+        
+        direction=new Vector2f(0,1);
+        
+        this.location = location;
+        
+        blasterList = new ArrayList<>();
+        partList = new ArrayList<>();
+        shootList = new ArrayList<>();
+        
+        blaster01 = new BossBlaster(new Point(location.getX()+18,location.getY()+152),direction.copy(),200);
+        partList.add(blaster01);
+        blasterList.add(blaster01);
+        blaster02 = new BossBlaster(new Point(location.getX()+210,location.getY()+162),direction.copy(),200);
+        partList.add(blaster02);
+        blasterList.add(blaster02);
+        blaster03 = new BossBlaster(new Point(location.getX()+406,location.getY()+162),direction.copy(),200);
+        partList.add(blaster03);
+        blasterList.add(blaster03);
+        blaster04 = new BossBlaster(new Point(location.getX()+598,location.getY()+152),direction.copy(),200);
+        partList.add(blaster04);  
+        blasterList.add(blaster04);
+        
+        body = new BossBody(new Point(location.getX(),location.getY()));
+        partList.add(body);
+        
+        core = new BossCore(new Point(location.getX()+244,location.getY()+64));
+        partList.add(core);
+         
+    }
     
-    public Boss() {
-        hp = 1000;
+    public void draw(Graphics g){
+        partList.forEach(item -> item.draw(g));
     }
+    
+    public void update(GameContainer gc, StateBasedGame sbg, int delta){
+        
+        time+=delta;
+        partList.forEach(item -> item.update(gc, sbg, delta));
+        
+//        if(isCoreAtk){
+//            isCoreAtk=core.coreAtk();
+//        }
 
-    public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
-        core = new BossCore();
-        core.init(gc, sbg);
-        body = new BossBody();
-        body.init(gc, sbg);
-        boss.add(core);
-    }
-
-    public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
-        boss.forEach(body -> {
-            try {
-                body.render(g);
-            } catch (SlickException ex) {
-                Logger.getLogger(Boss.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
-        blasters.forEach(blaster -> {
-            try {
-                blaster.render(g);
-            } catch (SlickException ex) {
-                Logger.getLogger(Boss.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });
-        bullets.forEach(bullet -> {
-            try {
-                bullet.render(g);
-            } catch (SlickException ex) {
-                Logger.getLogger(Boss.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        });   
-    }
-
-    public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
-        if (onIntro) introBoss();
-        else {
-            time -= (delta / 1000.0f);
-
-            blasters.forEach(b -> {
-                try {
-                    b.update(delta);
-                } catch (SlickException ex) {
-                    Logger.getLogger(Boss.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            });
-
-            bullets.forEach(bullet ->{
-                try {
-                    bullet.update(delta, Play.guts);
-                } catch (SlickException ex) {
-                    Logger.getLogger(Boss.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            });
-            bullets.removeIf(bullet -> bullet.bullet.isStopped());
+        if(hp>1500){
             
-            core.update(delta);
-
-            if (time <= 0) { // select attack
-                //attack = (int) (Math.random() * 2) +1;
-                attack = randomBullets;
-                time = 10; lastTime = 10;
-            } // select attack
-
-            switch (attack) {
-                case idle:
-                    break;
-                case randomBullets:
-                    this.randomBullets();
-                    break;
-                case comboBullets:
-                   // this.comboBullets();
-                    break;
+            time=0;
+            this.attackSequenceL(0, 15, 600,200);
+            this.attackSequenceR(3, 15, 600,200);
+            
+        }else if(hp>1000){
+            if(isCoreAtk){
+                
+                core.coreAtk();
+                
+            }else{
+                
+                this.attackSequenceL(0, 15, 400,400);
+                this.attackSequenceR(3, 15, 400,400);
+                this.attackTarget(1, targetHitbox, 400, 1000);
+                this.attackTarget(2, targetHitbox, 400, 1000);
+                
             }
+        }else if(hp>500){
+            
+            this.attackSequenceR(0, 10, 400,300);
+            this.attackSequenceL(3, 10, 400,300);
+            this.attackTarget(1, targetHitbox, 500, 1000);
+            this.attackTarget(2, targetHitbox, 500, 1000);
+         
+        }else if(hp>0){
+            
+            this.attackSequenceL(0,3,100,700);
+            this.attackSequenceR(3,3,100,700);
+            this.attackSequenceL(2,3,100,700);
+            this.attackSequenceR(1,3,100,700);
+            
         }
+        
     }
-//    
-//    public void pause() {
-//        blasters.forEach(b -> {
-//            b.blaster.setAutoUpdate(false);
-//        });
-//    }
-//    
-//    public void dispause() {
-//        blasters.forEach(b -> {
-//            if (b.onAttack == true) b.blaster.setAutoUpdate(true);
-//        });
-//    }
-//    
-    public void randomBullets() throws SlickException {
-        if (lastTime - time >= 0.2){
-            rand = (int) (Math.random() * 4);
-            if (blasters.get(rand).onAttack == false) {
-                blasters.get(rand).directAttack();
-                blasters.get(rand).onAttack = true;
-            }
-            lastTime = time;
-        }
-    }
-//    
-//    public void comboBullets() throws SlickException {
-//        if (time < -200){
-//            blasters.get(1).attack(); blasters.get(2).attack();
-//        }
-//        if (time > -150 && time < - 100){
-//            blasters.get(0).attack(); blasters.get(3).attack();
-//        }
-//        if (time > -50 && time <- 0){
-//            blasters.get(1).attack(); blasters.get(2).attack();
-//            blasters.get(0).attack(); blasters.get(3).attack();
-//        }
-//    }
-//    
-//    public void flowerBullets() throws SlickException {
-//        if (time % 10 == 0){
-//        }     
     
-    public void introBoss() throws SlickException {
-        if (core.status == 0 && core.animAtual[core.status].isStopped() && boss.size() == 1) {
-            boss.add(body);
-        }
-        if (body.bodyIntro.isStopped()) {
-            core.status = 1;
-            blasters.add(new BossBlaster(234, 175));
-            blasters.add(new BossBlaster(426,183));
-            blasters.add(new BossBlaster(622, 183));
-            blasters.add(new BossBlaster(812, 175));
-        }
-        if (core.status == 1 && core.animAtual[core.status].isStopped()) {
-            core.status = 2;
-            onIntro = false;
-        }
+    public void checkCollision(ArrayList<Projectile> lista){
+        lista.forEach(shoot -> {
+            if(shoot.checkCollision(core.getHitbox()))hp-=coreDamage;
+            else if(shoot.checkCollision(body.getHitbox()))hp-=bodyDamage;
+            else if(shoot.checkCollision(blaster01.getHitbox()))hp-=blasterDamage;
+            else if(shoot.checkCollision(blaster02.getHitbox()))hp-=blasterDamage;
+            else if(shoot.checkCollision(blaster03.getHitbox()))hp-=blasterDamage;
+            else if(shoot.checkCollision(blaster04.getHitbox()))hp-=blasterDamage;
+        });
+    }
+    
+    public void checkBulletCollision(Shape c){
+        blaster01.checkBulletCollision(c);
+        blaster02.checkBulletCollision(c);
+        blaster03.checkBulletCollision(c);
+        blaster04.checkBulletCollision(c);
+    }
+   
+    public void attackSequence(){
+        int cd = (int)(Math.random()*500);
+        int stepAngle = (int)((Math.random()*20)+5);
+            blasterList.get(0).sequenceAttack(45,135,cd, stepAngle);
+            blasterList.get(3).sequenceAttack(135,45,cd, stepAngle);    
+    }
+    
+    public void attackSequence(float startAngle,float finalAngle,int blaster,int step, int cd){
+        blasterList.get(blaster).sequenceAttack(startAngle, finalAngle, cd, step);
+        
+    }
+    
+    public void attackSequenceR(int blaster,int step,int cd , int speed){
+        blasterList.get(blaster).sequenceAttack(45,135, cd, step);
+        blasterList.get(blaster).speed=speed;
+        
+    }
+    
+    public void attackSequenceL(int blaster,int step,int cd, int speed){
+        blasterList.get(blaster).sequenceAttack(135,45,cd,step);
+        blasterList.get(blaster).speed=speed;
+    }
+    
+    public void attackTarget(Shape t){
+            blasterList.get(1).targetAttack(t);
+            blasterList.get(2).targetAttack(t);
+    }
+    
+    public void attackTarget(int blaster , Shape t , int speed , int cd){
+        blasterList.get(blaster).setCdAtk(cd);
+        blasterList.get(blaster).speed=speed;
+        blasterList.get(blaster).targetAttack(t);
+    }
+    
+    public void takeDamage(int damage){
+        this.hp -= damage;
+    }
+    
+    public void setTarget(Shape c){
+        this.targetHitbox=c;
+    }
+    
+    public ArrayList<Projectile> getShootList(){
+        ArrayList<Projectile> shootList = new ArrayList<>();
+        blasterList.forEach(blaster -> {
+           shootList.addAll(blaster.shootList);
+        });
+        return shootList;
+    }
+    
+    public void coreAttack(){
+        if(!isCoreAtk)isCoreAtk=true;
     }
     
 }

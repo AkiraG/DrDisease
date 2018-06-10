@@ -1,118 +1,170 @@
 package doctordisease;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.newdawn.slick.*;
-import org.newdawn.slick.command.BasicCommand;
+import org.newdawn.slick.geom.Line;
+import org.newdawn.slick.geom.Point;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.*;
 
 public class Player {
+    
+    Sound bulletSound;
 
-    static int x, y;
+    int speed,cd,timer;
+    
+    float hp;
+    
+    boolean isOnCd,isAtk;
+    
+    Point location;
+    Vector2f direction;
     Rectangle hitbox;
-    boolean isOnCooldown;
-    boolean isKeyDown = false;
-    int cooldownTimer;
-    static List<Tiro> tiros = new ArrayList <Tiro>();
-    BasicCommand attack = new BasicCommand("attack");
-    boolean hand = false;
-    SpriteSheet gutsSheet, propulsionSheet;
-    Animation guts, propulsion;
-    boolean idle;
-    Sound gutsShot;
-    Vector2f vec;
     
-    public Player() {
-        x = 512;
-        y = 500;
-    }
+    ArrayList<Projectile> shootList;
+    ArrayList<Line> moveLimit;
+    
+    SpriteSheet sBase,sPropulsion,sBullet;
+    Animation aBase,aPropulsion,aPropulsionUp,aPropulsionIdle,aPropulsionDown;
 
-    public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
-        gutsSheet = new SpriteSheet("data/image/Fase01/Guts-shoot-Sheet.png", 44, 62);
-        propulsionSheet = new SpriteSheet("data/image/Fase01/Guts-propulsion-Sheet.png", 8, 16);
-        guts = new Animation(gutsSheet, 100);
-        guts.setAutoUpdate(false);
-        propulsion = new Animation(propulsionSheet, 100);
-        propulsion.setAutoUpdate(false);
-        hitbox = new Rectangle(x, y, guts.getWidth(), guts.getHeight());
-        gutsShot = new Sound("data/sound/Fase01/Guts_shot.ogg");
+    public Player(Point location, int speed) {
+        
+        hp = 100f;
+        
+        this.cd = 300;
+        this.isOnCd =false;
+        this.isAtk=false;
+        this.timer=0;
+        this.shootList=new ArrayList<>();
+        
+        this.location = location;
+        this.speed = speed;
+        try {
+            
+            sBase = new SpriteSheet("/data/image/Fase01/Guts-shoot-Sheet.png",44,62);
+            sPropulsion = new SpriteSheet("/data/image/Fase01/Guts-propulsion-Sheet.png",8,16);
+            sBullet = new SpriteSheet("/data/image/FAse01/bulletSheet.png",20,20);
+            bulletSound = new Sound("data/sound/Fase01/Guts_shot.ogg");
+            
+            aBase = new Animation(sBase,100);
+            aBase.setAutoUpdate(false);
+            aPropulsionUp = new Animation(sPropulsion,7,0,8,0,true,60,true);
+            aPropulsionIdle = new Animation(sPropulsion,0,0,4,0,true,60,true);
+            aPropulsionDown = new Animation(sPropulsion,5,0,6,0,true,60,true);
+            aPropulsion = aPropulsionIdle;
+        
+        } catch (SlickException ex) {
+            Logger.getLogger(Player.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        hitbox = new Rectangle(location.getX(),location.getY(),aBase.getWidth(),aBase.getHeight());
+        direction=new Vector2f(0,0);
     }
-
-    public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
-        g.draw(hitbox);
-        g.drawAnimation(guts, x, y);
-        g.drawAnimation(propulsion, x + 18, y + 40);
-        for (Tiro t: tiros){
-            t.render(gc, sbg, g);
-        }  
-    }
-
-    public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
-        idle = true;
-        if (gc.getInput().isKeyDown(Input.KEY_LEFT)) {
-            x -= 10;
-            idle = false;
-        }
-        if (x < 0) x += x * -1 ;
-        if (gc.getInput().isKeyDown(Input.KEY_RIGHT)) {
-            x += 10;
-            idle = false;
-        }
-        if (x > (1024 - hitbox.getWidth())) x = (int) (1024 - hitbox.getWidth());
-        if (gc.getInput().isKeyDown(Input.KEY_UP)) {
-            y -= 10;
-            idle = false;
-        }
-        if (y < 0) y += 10 ;
-        if (gc.getInput().isKeyDown(Input.KEY_DOWN)) {
-            y += 10;
-            idle = false;
-        }
-        if (y > (768 - hitbox.getHeight())) y = (int) (768 - hitbox.getHeight());
-        if (idle == true) {
-            propulsion.setAutoUpdate(true);
-            if (propulsion.getFrame() == 6) {
-                propulsion.restart();
-            }
-        } else propulsion.setAutoUpdate(false);
-        vec = new Vector2f(x, y);
-        hitbox.setLocation(vec);
-        if (isOnCooldown) {
-            cooldownTimer += delta;
-            if (cooldownTimer > 100) {
-                isOnCooldown = false;
-            }
-        }
-        if (gc.getInput().isKeyDown(Input.KEY_SPACE)) {
-            this.attack();
-            guts.setAutoUpdate(true);
-        } else {
-            guts.setAutoUpdate(false);
-            guts.restart();
-            hand = false;
-        }
-        tiros.forEach(tiros -> {
-            tiros.update();
+    
+    public void draw(Graphics g){
+        
+        shootList.forEach(shoot -> {
+            shoot.draw(g);
         });
-        tiros.removeIf(tiros -> tiros.bullet.isStopped());
+        
+//        g.draw(hitbox);
+        aBase.draw(location.getX(), location.getY());
+        aPropulsion.draw(location.getX()+ 18, location.getY()+40);
+        
+  
     }
     
-    public void attack() throws SlickException{
-        if (isOnCooldown == false && guts.getFrame() >= 3 && guts.getFrame() < 6){
-            if (hand == true)  tiros.add(new Tiro(x,y));
-            if (hand == false) tiros.add(new Tiro((x + 40),y));
-            gutsShot.play();
-            hand = !hand;
-            isOnCooldown = true;
-            cooldownTimer = 0;
-            if (guts.getFrame() == 5) guts.setCurrentFrame(2);
+    public void update(GameContainer gc, StateBasedGame sbg, int delta){
+        
+        aPropulsion=aPropulsionIdle;
+        hitbox.setLocation(location.getX(), location.getY());
+        
+        Input input = gc.getInput();
+        
+        
+        if(input.isKeyDown(Input.KEY_LEFT) && !this.checkCollision(moveLimit.get(1)))
+            direction.set(direction.getX()-1,direction.getY());
+        
+        if(input.isKeyDown(Input.KEY_RIGHT) && !this.checkCollision(moveLimit.get(3)))
+            direction.set(direction.getX()+1,direction.getY());
+        
+        if(input.isKeyDown(Input.KEY_DOWN) && !this.checkCollision(moveLimit.get(2))){
+            direction.set(direction.getX(),direction.getY()+1);
+            aPropulsion=aPropulsionDown;
         }
+        if(input.isKeyDown(Input.KEY_UP) && !this.checkCollision(moveLimit.get(0))){
+            direction.set(direction.getX(),direction.getY()-1);
+            aPropulsion=aPropulsionUp;
+        }
+        
+        if(input.isKeyDown(Input.KEY_SPACE))aBase.setAutoUpdate(true);
+        else {
+            aBase.setAutoUpdate(false);
+            aBase.setCurrentFrame(0);
+        }
+       
+       
+        this.move(delta);
+        
+        this.handleAtk();
+        shootList.forEach(bullet -> bullet.update(delta));
+        
+        shootList.removeIf(bullet -> bullet.checkAnimation());
+        
+        
     }
     
-    public void pause() {
-        guts.setAutoUpdate(false);
-        propulsion.setAutoUpdate(false);
+    public void handleAtk(){
+            if(aBase.getFrame()==2 && !isAtk){
+                shootList.add(new Projectile(new Point(location.getX()+37,location.getY()+12),new Vector2f(0,-600),sBullet));
+                //if(!bulletSound.playing())bulletSound.play();
+                isAtk=!isAtk;
+            }else if(aBase.getFrame()==3 && isAtk){
+                shootList.add(new Projectile(new Point(location.getX()+5,location.getY()+12),new Vector2f(0,-600),sBullet));
+                //if(!bulletSound.playing())bulletSound.play();
+                isAtk=!isAtk;    
+            }else if(aBase.getFrame()==5){
+                aBase.setCurrentFrame(2);   
+            }  
     }
+    
+    public void move(int delta){
+        
+        location.setX(location.getX()+(float)(direction.getX()*(speed * delta/1000.0)));
+        location.setY(location.getY()+(float)(direction.getY()*(speed * delta/1000.0)));
+        direction.set(0,0);
+        
+    }
+    
+    public boolean checkCollision(Shape c){
+        return hitbox.intersects(c);
+    }
+    public void checkCollision(ArrayList<Projectile> shootList){
+        shootList.forEach(shoot -> {
+            if(shoot.checkCollision(hitbox))hp-=5;
+                });
+    }
+    
+    public void checkBulletCollision(Shape c){
+        shootList.forEach(bullet -> bullet.checkCollision(c));
+    }
+    
+    public Shape getHitbox(){
+        return hitbox;
+    }
+    
+    public void setLimits(ArrayList<Line> c){
+        this.moveLimit=c;
+    }
+    
+    public ArrayList<Projectile> getShootList(){
+        return shootList;
+    }
+    
+
+
 }

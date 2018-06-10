@@ -21,74 +21,35 @@ import org.newdawn.slick.state.*;
  * @author saita
  */
 public class Play extends BasicGameState implements InputProviderListener {
-    
-    public final int ID = 2;
-    static List<Line> EDGE = new ArrayList <Line>();
-    static Player guts;
-    Boss firstBoss;
-    private Command esc = new BasicCommand("esc");
-    InputProvider provider;
-    Image background;
-    boolean pause = false;
-   
-    public Play(int state){    
-    }
-    
-    @Override
-    public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
-        EDGE.add(new Line(2, 2, 1022, 2)); // desenhando a parte do game
-        EDGE.add(new Line(1, 1, 1, 767)); // desenhando a parte do game
-        EDGE.add(new Line(1023, 767, 1, 767)); // desenhando a parte do game
-        EDGE.add(new Line(1023, 767, 1023, 1)); // desenhando a parte do game
-        guts = new Player();
-        guts.init(gc, sbg);
-        firstBoss = new Boss();
-        firstBoss.init(gc, sbg);
-        provider = new InputProvider(gc.getInput());
-        provider.addListener(this);
-        provider.bindCommand(new KeyControl(Input.KEY_ESCAPE), esc);
-        background = new Image("data/image/Fase01/background-stomach.png");
-    }
-   
-    @Override
-    public void render(GameContainer gc, StateBasedGame sbg, Graphics g) throws SlickException {
-        EDGE.forEach(EDGE -> g.draw(EDGE));
-        g.drawImage(background, 0, 0);
-        firstBoss.render(gc, sbg, g);
-        guts.render(gc, sbg, g);  
-    }
-   
-    @Override
-    public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
-        
-        if (pause == false){
-            guts.update(gc, sbg, delta);
-            firstBoss.update(gc, sbg, ID);
-        }
-        else {
-            guts.pause();
-            //firstBoss.pause();
-        }
-    }
-    
+
     @Override
     public int getID() {
-        return 2;
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void controlPressed(Command cmnd) {
-        if (cmnd.toString().contains("esc")) {
-            pause = !pause;
-            if (pause == false) {
-               // firstBoss.dispause();
-            }
-        }
+    public void init(GameContainer container, StateBasedGame game) throws SlickException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void controlReleased(Command cmnd) {
-        
+    public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void controlPressed(Command command) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void controlReleased(Command command) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

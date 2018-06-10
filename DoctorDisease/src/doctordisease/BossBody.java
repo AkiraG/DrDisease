@@ -5,11 +5,17 @@
  */
 package doctordisease;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.newdawn.slick.Animation;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
+import org.newdawn.slick.geom.Point;
+import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.state.StateBasedGame;
 
 /**
@@ -17,28 +23,50 @@ import org.newdawn.slick.state.StateBasedGame;
  * @author Gabriel
  */
 public class BossBody extends BossConcept {
+    SpriteSheet sBase;
+    Animation aBase;
 
-    SpriteSheet sheetBodyIntro;
-    Animation bodyIntro;
-    int x, y;
+    public BossBody(Point location) {
+        super(location);
+        
+        try {
+            
+            sBase = new SpriteSheet("/data/image/Fase01/body-1-1-intro.png",616,208);
+            aBase= new Animation(sBase,60);
+            
+            aBase.setAutoUpdate(false);
+            aBase.setCurrentFrame(41);
+            aBase.stopAt(41);
+            
+        } catch (SlickException ex) {
+            Logger.getLogger(BossBody.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        super.setHitbox(new Rectangle(location.getX(),location.getY(),aBase.getWidth(),aBase.getHeight()/2));
+        
+    }
 
-    public BossBody() {
+    @Override
+    public void draw(Graphics g) {
+        aBase.draw(location.getX(),location.getY());
+//        g.draw(hitbox);
+    }
+     @Override
+    public void draw(Graphics g, Color c) {
+        aBase.draw(location.getX(),location.getY(),c);
+    }
+
+    @Override
+    public void update(GameContainer gc, StateBasedGame sbg, int delta) {
+        
     }
     
-    public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
-        sheetBodyIntro = new SpriteSheet("data/image/Fase01/body-1-1-intro.png", 616, 208);
-        bodyIntro = new Animation(sheetBodyIntro, 10);
-        bodyIntro.stopAt(41);
-        x = 240;
+    public void runIntro(){
+        aBase.setAutoUpdate(true);
     }
-
-    @Override
-    public void render(Graphics g) throws SlickException {
-        g.drawAnimation(bodyIntro, x, y);
-    }
-
-    @Override
-    public void update(int delta) throws SlickException {
+    
+    public Shape getHitbox(){
+        return hitbox;
     }
     
 }

@@ -68,7 +68,6 @@ public class IntroState extends BasicGameState {
            DoctorDisease.gameRunning = true;
            tMusic.begin();
        } 
-        System.out.println(delta);
        Input input=gc.getInput();
        time += delta;
        if(state==0)if(input.isKeyPressed(KEY_ENTER)||time>1800) state=1;

@@ -40,10 +40,8 @@ public class DoctorDisease extends StateBasedGame {
 
     @Override
     public void initStatesList(GameContainer gc) throws SlickException {
-        this.addState(new IntroState(0));
-        this.addState(new Menu(1));
-        this.addState(new Play(2));
-        this.enterState(1);
+        this.addState(new TesteState(10));
+        this.enterState(10);
     }
     
 }

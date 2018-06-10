@@ -5,24 +5,49 @@
  */
 package doctordisease;
 
+import org.newdawn.slick.Color;
+import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Point;
+import org.newdawn.slick.geom.Shape;
+import org.newdawn.slick.geom.Vector2f;
+import org.newdawn.slick.state.StateBasedGame;
 
 /**
  *
  * @author Gabriel
  */
-public abstract class  BossConcept {
+public abstract class  BossConcept{
     
-    int x, y;
-    
-    public void init() throws SlickException {
+    protected Point location;
+    protected Vector2f direction;
+    protected Shape hitbox;
+
+    public BossConcept(Point location, Vector2f direction) {
+        this.location = location;
+        this.direction = direction;
+
     }
     
-    public void update(int delta) throws SlickException {
+    public BossConcept(Point location){
+        this.location = location;
+    }
+   
+    public abstract void draw(Graphics g);
+    
+    public abstract void draw(Graphics g, Color c);
+    
+    public abstract void update(GameContainer gc, StateBasedGame sbg, int delta);
+    
+    public boolean checkCollision(Shape c){
+        return hitbox.intersects(c);
     }
     
-    public void render(Graphics g) throws SlickException {
+    public void setHitbox(Shape c){
+        hitbox=c;
     }
     
+    public void setDirection(Vector2f direction){
+        this.direction = direction;
+    }
 }
