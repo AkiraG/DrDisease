@@ -26,8 +26,16 @@ import org.newdawn.slick.state.StateBasedGame;
  */
 public class BossCore extends BossConcept {
     
+    ArrayList<LaserShot> laserList;
+    
+    String status;
+    
+    int atkType;
+    
     SpriteSheet sIntro01,sIntro02,sIdle,sAtkSet,sAtkChrg,sAtkShoot,sAtkCd,sAtkReset;
     Animation aBase,aIntro01,aIntro02,aIdle,aAtkSet,aAtkChrg,aAtkShoot,aAtkCd,aAtkReset;
+    
+
     
     boolean isAtk;
     
@@ -38,9 +46,14 @@ public class BossCore extends BossConcept {
     public BossCore(Point location) {
         super(location);
         
+        status = "Intro";
+        
+        laserList= new ArrayList<>();
+        
         isAtk=false;
         
         try {
+
             sIntro01 = new SpriteSheet("data/image/Fase01/core-1-1-intro-pt1.png", 128, 128);
             sIntro02 = new SpriteSheet("data/image/Fase01/core-1-1-intro-pt2.png", 128, 128);
             sIdle = new SpriteSheet("data/image/Fase01/core-1-1-idle.png", 128, 128);
@@ -81,7 +94,7 @@ public class BossCore extends BossConcept {
             aAtkReset.setAutoUpdate(false);
             aAtkReset.stopAt(aAtkReset.getFrameCount()-2);
             
-            aBase=aIdle;
+            aBase=aIntro01;
             
             
             
@@ -96,7 +109,9 @@ public class BossCore extends BossConcept {
 
     @Override
     public void draw(Graphics g) {
+        laserList.forEach(laser -> laser.draw(g));
         aBase.draw(location.getX(), location.getY());
+        
 //        g.draw(hitbox);
     }
     
@@ -107,7 +122,19 @@ public class BossCore extends BossConcept {
 
     @Override
     public void update(GameContainer gc, StateBasedGame sbg, int delta) {
+        laserList.forEach(laser -> laser.update(delta));
+        laserList.removeIf(laser -> laser.checkAnimation());
         
+        if(status.equals("Intro")){
+            if(aIntro01.isStopped()){
+                aBase=aIntro02;
+                }
+            if(aIntro02.isStopped()){
+                System.out.println("Idle");
+                status="Game";
+                aBase=aIdle;
+            }
+        }else if(status.equals("Game")){
           if(isAtk){
               if(aAtkSet.isStopped()){
                   aBase.restart();
@@ -115,23 +142,61 @@ public class BossCore extends BossConcept {
                   aBase=aAtkChrg;
                   aBase.setAutoUpdate(true);
               }else if(aAtkChrg.isStopped()){
-                  aBase.restart();
-                  aBase.setAutoUpdate(false);
-                  aBase=aAtkShoot;
-                  aBase.setAutoUpdate(true);
-              }else if(aAtkShoot.isStopped()){
-                  time+=delta;
-                    if(time>=cd){
+                  time+=1;
+                  if(time>=10){
+                        time=0;
                         aBase.restart();
                         aBase.setAutoUpdate(false);
-                        aBase=aAtkCd;
+                        aBase=aAtkShoot;
                         aBase.setAutoUpdate(true);
-                    }
+                        
+                        switch(atkType){
+                            case 0:
+                                  laserList.add(new LaserShot(new Point(location.getX()+(aBase.getWidth()/2),
+                                          location.getY()+(aBase.getHeight())-30),new Vector2f(0,1)));
+                            break;
+                            case 1:
+                                  laserList.add(new LaserShot(new Point(location.getX()+(aBase.getWidth()/2),
+                                      location.getY()+(aBase.getHeight())-30),new Vector2f(0,1)));
+                                  laserList.add(new LaserShot(new Point(location.getX()+(aBase.getWidth()/2),
+                                      location.getY()+(aBase.getHeight())-30),new Vector2f(0.5f,1)));
+                                  laserList.add(new LaserShot(new Point(location.getX()+(aBase.getWidth()/2),
+                                      location.getY()+(aBase.getHeight())-30),new Vector2f(-0.5f,1)));
+                            break;
+                            case 2:
+                                  laserList.add(new LaserShot(new Point(location.getX()+(aBase.getWidth()/2),
+                                      location.getY()+(aBase.getHeight())-30),new Vector2f(0.25f,1)));
+                                  laserList.add(new LaserShot(new Point(location.getX()+(aBase.getWidth()/2),
+                                      location.getY()+(aBase.getHeight())-30),new Vector2f(-0.25f,1)));
+                                  laserList.add(new LaserShot(new Point(location.getX()+(aBase.getWidth()/2),
+                                      location.getY()+(aBase.getHeight())-30),new Vector2f(0.75f,1)));
+                                  laserList.add(new LaserShot(new Point(location.getX()+(aBase.getWidth()/2),
+                                      location.getY()+(aBase.getHeight())-30),new Vector2f(-0.75f,1)));
+                                  laserList.add(new LaserShot(new Point(location.getX()+(aBase.getWidth()/2),
+                                      location.getY()+(aBase.getHeight())-30),new Vector2f(1.25f,1)));
+                                  laserList.add(new LaserShot(new Point(location.getX()+(aBase.getWidth()/2),
+                                      location.getY()+(aBase.getHeight())-30),new Vector2f(-1.25f,1)));
+                            break;     
+                        }
+                    }else aAtkChrg.restart();
+                  }else if(aAtkShoot.isStopped()){
+                    time+=delta;
+                      if(time>=cd){
+                            time=0;
+                            aBase.restart();
+                            aBase.setAutoUpdate(false);
+                            aBase=aAtkCd;
+                            aBase.setAutoUpdate(true);
+                      }
               }else if(aAtkCd.isStopped()){
-                    aBase.restart();
-                    aBase.setAutoUpdate(false);
-                    aBase=aAtkReset;
-                    aBase.setAutoUpdate(true);
+                    time+=1;
+                    if(time>=10){
+                        time=0;
+                        aBase.restart();
+                        aBase.setAutoUpdate(false);
+                        aBase=aAtkReset;
+                        aBase.setAutoUpdate(true);
+                    }else aAtkCd.restart();
               }else if(aAtkReset.isStopped()){
                   aBase.restart();
                   aBase.setAutoUpdate(false);
@@ -140,22 +205,41 @@ public class BossCore extends BossConcept {
                   isAtk=false;
               }
               
-          }else if(aBase.isStopped())aBase.restart();
-    
+          }else if(aBase.equals(aIdle) && aBase.isStopped())aBase.restart();
+        }
     }
     
     public Shape getHitbox(){
         return hitbox;
     }
     
-    public boolean coreAtk(){
+    public void coreAtk(int a){
         if(!isAtk){
+            atkType=a;
             aBase=aAtkSet;
             aBase.setAutoUpdate(true);
             isAtk=true;
-            return true;
         }
-        return false;
+    }
+    
+    public boolean isAtk(){
+        return isAtk;
+    }
+    
+    public boolean isVulnerable(){
+        return(aBase.equals(aAtkCd));
+    }
+    
+    public ArrayList<LaserShot> getLaserList(){
+        return laserList;
+    }
+    
+    public void runAnimation(){
+        aBase.setAutoUpdate(true);
+    }
+    
+    public Animation checkIntroAnimation(){
+        return aIntro01;
     }
     
 }

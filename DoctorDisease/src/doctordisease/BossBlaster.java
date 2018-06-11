@@ -66,7 +66,7 @@ public class BossBlaster extends BossConcept {
             aShoot.setAutoUpdate(false);
             aShoot.stopAt(aShoot.getFrameCount()-1);
             
-            aBase=aShoot;
+            aBase=aIntro;
             
             for(int a=0;a<aIntro.getFrameCount();a++)
                 aIntro.getImage(a).setCenterOfRotation(0,aIntro.getImage(a).getHeight()/2);
@@ -103,6 +103,8 @@ public class BossBlaster extends BossConcept {
     
     @Override
     public void update(GameContainer gc, StateBasedGame sbg, int delta) {
+        if(aIntro.isStopped())aBase=aShoot;
+        
         time+=delta;
         shootList.removeIf(shoot -> shoot.checkAnimation());
         
@@ -116,9 +118,10 @@ public class BossBlaster extends BossConcept {
             aBase.restart();
         }
         
-        if(typeAtk.equals("Flower")){
-            if(time>=cdAtk && isAtk ){
-                   time=0;
+        switch (typeAtk) {
+            case "Flower":
+                if(time>=cdAtk && isAtk ){
+                    time=0;
                     if((direction.getTheta()<=targetAngle)&&(aBase.getCurrentFrame().equals(aBase.getImage(0)))){
                         direction.setTheta(direction.getTheta()+stepAngle);
                         this.directAttack((float)direction.getTheta());
@@ -127,11 +130,11 @@ public class BossBlaster extends BossConcept {
                         isAtk=false;
                         this.cancelAttack();   
                     }
-            }
-        }else if(typeAtk.equals("RFlower")){
-            if(time>=cdAtk && isAtk ){
-                   time=0;
-                   if((direction.getTheta()>=targetAngle)&&(aBase.getCurrentFrame().equals(aBase.getImage(0)))){
+                }   break;
+            case "RFlower":
+                if(time>=cdAtk && isAtk ){
+                    time=0;
+                    if((direction.getTheta()>=targetAngle)&&(aBase.getCurrentFrame().equals(aBase.getImage(0)))){
                         direction.setTheta(direction.getTheta()+stepAngle);
                         this.directAttack((float)direction.getTheta());
                         isShoot=false;
@@ -139,19 +142,27 @@ public class BossBlaster extends BossConcept {
                         isAtk=false;
                         this.cancelAttack();   
                     }
-            }
-            
-        }else if(typeAtk.equals("Target")){
-            if(time>=cdAtk && isAtk){
-                time=0;
-                this.directAttack();
-                isShoot=false;
-                isAtk=false;
-            }
+                }   break;
+            case "Target":
+                if(time>=cdAtk && isAtk){
+                    time=0;
+                    this.directAttack();
+                    isShoot=false;
+                    isAtk=false;
+                }   break;
+            case "Direct":
+                if(time>=cdAtk && isAtk){
+                    time=0;
+                    this.directAttack();
+                    isShoot=false;
+                    isAtk=false;
+                } break;
+            default:
+                break;
         }
         
 
-        if(!isShoot && aBase.getFrame()==4){
+        if(!isShoot && aShoot.getFrame()==4){
             shootList.add(new Projectile(new Point(location.getX(),location.getY()+aBase.getCurrentFrame().getHeight()/2),
                     new Vector2f(direction.getX(),direction.getY()).scale(speed),bullet)); 
             isShoot=true;
@@ -164,11 +175,13 @@ public class BossBlaster extends BossConcept {
     }
     
     public void directAttack(){
+        
         isAtk=true;
         aBase.setAutoUpdate(true);
     }
     
     public void directAttack(float angle){
+        
         this.setAngle(angle);
         this.directAttack();
     }
@@ -196,6 +209,7 @@ public class BossBlaster extends BossConcept {
     
     public void cancelAttack(){
         isShoot=false;
+        isAtk=false;
         aBase.setAutoUpdate(false);
         aBase.restart();
     }
@@ -230,12 +244,35 @@ public class BossBlaster extends BossConcept {
         }
     }
     
+    public void continuousAttack(float angle,int cd, int speed){
+        if(!isAtk){
+            isAtk=true;
+            this.setAngle(angle);
+            this.setCdAtk(cd);
+            this.speed=speed;
+            typeAtk="Direct";
+            
+        }
+    }
+    
     public void setCdAtk(int cd){
         this.cdAtk=cd;
     }
     
     public ArrayList<Projectile> getShootList(){
         return this.shootList;
+    }
+    
+    public boolean isAtk(){
+        return isAtk;
+    }
+    
+    public void runIntro(){
+        aIntro.setAutoUpdate(true);
+    }
+    
+    public Animation checkAnimation(){
+        return aIntro;
     }
 
    

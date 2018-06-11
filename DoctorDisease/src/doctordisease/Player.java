@@ -13,13 +13,15 @@ import org.newdawn.slick.state.*;
 
 public class Player {
     
+    String status;
+    
     Sound bulletSound;
-
-    int speed,cd,timer;
+    
+    int speed,cd,timer,timerFlash,cdHit;
     
     float hp;
     
-    boolean isOnCd,isAtk;
+    boolean isOnCd,isAtk,takeHit,flashDraw;
     
     Point location;
     Vector2f direction;
@@ -30,11 +32,15 @@ public class Player {
     
     SpriteSheet sBase,sPropulsion,sBullet;
     Animation aBase,aPropulsion,aPropulsionUp,aPropulsionIdle,aPropulsionDown;
-
+    
     public Player(Point location, int speed) {
+        
+        status="Intro";
         
         hp = 100f;
         
+        this.takeHit=false;
+        this.cdHit = 100;
         this.cd = 300;
         this.isOnCd =false;
         this.isAtk=false;
@@ -72,49 +78,69 @@ public class Player {
         });
         
 //        g.draw(hitbox);
-        aBase.draw(location.getX(), location.getY());
+        if(flashDraw)aBase.drawFlash(location.getX(), location.getY(), aBase.getWidth(), aBase.getHeight());
+        else aBase.draw(location.getX(), location.getY());
+        
         aPropulsion.draw(location.getX()+ 18, location.getY()+40);
         
   
     }
     
     public void update(GameContainer gc, StateBasedGame sbg, int delta){
-        
-        aPropulsion=aPropulsionIdle;
-        hitbox.setLocation(location.getX(), location.getY());
-        
-        Input input = gc.getInput();
-        
-        
-        if(input.isKeyDown(Input.KEY_LEFT) && !this.checkCollision(moveLimit.get(1)))
-            direction.set(direction.getX()-1,direction.getY());
-        
-        if(input.isKeyDown(Input.KEY_RIGHT) && !this.checkCollision(moveLimit.get(3)))
-            direction.set(direction.getX()+1,direction.getY());
-        
-        if(input.isKeyDown(Input.KEY_DOWN) && !this.checkCollision(moveLimit.get(2))){
-            direction.set(direction.getX(),direction.getY()+1);
-            aPropulsion=aPropulsionDown;
+        if(status.equals("Intro")){
+            
         }
-        if(input.isKeyDown(Input.KEY_UP) && !this.checkCollision(moveLimit.get(0))){
-            direction.set(direction.getX(),direction.getY()-1);
-            aPropulsion=aPropulsionUp;
-        }
-        
-        if(input.isKeyDown(Input.KEY_SPACE))aBase.setAutoUpdate(true);
-        else {
-            aBase.setAutoUpdate(false);
-            aBase.setCurrentFrame(0);
-        }
-       
-       
-        this.move(delta);
-        
-        this.handleAtk();
-        shootList.forEach(bullet -> bullet.update(delta));
-        
-        shootList.removeIf(bullet -> bullet.checkAnimation());
-        
+        else if(status.equals("Game")){
+            
+            hitbox.setLocation(location.getX(), location.getY());
+
+            if(takeHit){
+                timer+=delta;
+                if(timer>=500){
+                    timer=0;
+                    takeHit=false;
+                }
+            }
+            if(flashDraw){
+                if(timer>=300)flashDraw=false;
+            }
+
+
+
+
+            Input input = gc.getInput();
+
+
+            if(input.isKeyDown(Input.KEY_LEFT) && !this.checkCollision(moveLimit.get(1)))
+                direction.set(direction.getX()-1,direction.getY());
+
+            if(input.isKeyDown(Input.KEY_RIGHT) && !this.checkCollision(moveLimit.get(3)))
+                direction.set(direction.getX()+1,direction.getY());
+
+            if(input.isKeyDown(Input.KEY_DOWN) && !this.checkCollision(moveLimit.get(2))){
+                direction.set(direction.getX(),direction.getY()+1);
+                aPropulsion=aPropulsionDown;
+            }
+            if(input.isKeyDown(Input.KEY_UP) && !this.checkCollision(moveLimit.get(0))){
+                direction.set(direction.getX(),direction.getY()-1);
+                aPropulsion=aPropulsionUp;
+            }
+
+            if(input.isKeyDown(Input.KEY_SPACE))aBase.setAutoUpdate(true);
+
+            else {
+                aBase.setAutoUpdate(false);
+                aBase.setCurrentFrame(0);
+            }
+
+
+            this.move(delta);
+            this.handleAtk();
+
+            shootList.forEach(bullet -> bullet.update(delta));
+
+            shootList.removeIf(bullet -> bullet.checkAnimation());
+        }   
         
     }
     
@@ -141,16 +167,44 @@ public class Player {
     }
     
     public boolean checkCollision(Shape c){
-        return hitbox.intersects(c);
+        if(status.equals("Game")){
+            return hitbox.intersects(c);
+        }
+        return false;
     }
+    
     public void checkCollision(ArrayList<Projectile> shootList){
+        if(status.equals("Game")){
         shootList.forEach(shoot -> {
-            if(shoot.checkCollision(hitbox))hp-=5;
-                });
+                if(!takeHit){
+                    if(shoot.checkCollision(hitbox)){
+                        takeHit=true;flashDraw=true;
+                        hp-=5;
+                    }
+                }
+            });
+        }
+    }
+    
+    public void checkLaserCollision(ArrayList<LaserShot> laserList){
+        if(status.equals("Game")){
+                laserList.forEach(laser -> {
+                if(!takeHit){
+                    if(laser.checkCollision(hitbox)){
+                        takeHit=true;
+                        flashDraw=true;
+                        hp-=20;
+                    }
+                }
+            });
+        }
+        
     }
     
     public void checkBulletCollision(Shape c){
-        shootList.forEach(bullet -> bullet.checkCollision(c));
+        
+        if(status.equals("Game"))shootList.forEach(bullet -> bullet.checkCollision(c));
+        
     }
     
     public Shape getHitbox(){
@@ -165,6 +219,4 @@ public class Player {
         return shootList;
     }
     
-
-
 }

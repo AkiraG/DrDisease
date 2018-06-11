@@ -35,7 +35,6 @@ public class BossBody extends BossConcept {
             aBase= new Animation(sBase,60);
             
             aBase.setAutoUpdate(false);
-            aBase.setCurrentFrame(41);
             aBase.stopAt(41);
             
         } catch (SlickException ex) {
@@ -67,6 +66,10 @@ public class BossBody extends BossConcept {
     
     public Shape getHitbox(){
         return hitbox;
+    }
+    
+    public Animation checkAnimation(){
+        return aBase;
     }
     
 }
