@@ -6,8 +6,11 @@
 package doctordisease;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Line;
@@ -21,6 +24,8 @@ import org.newdawn.slick.state.StateBasedGame;
  * @author saita
  */
 public class TesteState extends BasicGameState{
+    
+    String status;
     long t1;
     long t2;
     boolean render=false;
@@ -30,21 +35,19 @@ public class TesteState extends BasicGameState{
     ArrayList<Line> EDGEmovement = new ArrayList <>();
     ArrayList<Line> EDGE = new ArrayList<>();
     int time=0;
-
-    
-    
+    Image bg;
     Player guts = new Player(new Point(512,500),300);
     
     Boss boss = new Boss(new Point(204,0));
     
     LaserShot laser = new LaserShot(new Point(0,0),new Vector2f(0,1));
     
-    
-
-
-
-    
     public TesteState(int state){
+        try {
+            this.bg = new Image("/data/image/Fase01/background-stomach.png");
+        } catch (SlickException ex) {
+            Logger.getLogger(TesteState.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
     }
 
@@ -55,7 +58,8 @@ public class TesteState extends BasicGameState{
 
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException {
-        guts = new Player(new Point(512,500),300);
+        status="Intro";
+        guts = new Player(new Point(490,500),300);
         boss = new Boss(new Point(204,0));
         laser = new LaserShot(new Point(0,0),new Vector2f(0,1));
         EDGEmovement.add(new Line(2, 200, 1022, 200)); // desenhando a parte do game
@@ -70,14 +74,13 @@ public class TesteState extends BasicGameState{
         
         boss.setTarget(guts.getHitbox());
 
-        guts.status="Game";
         boss.runIntro();
     }
 
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
         
-
+        //bg.draw();
         boss.draw(g);
         guts.draw(g);  
         g.drawString(Float.toString(boss.hp), 50, 50);
@@ -88,8 +91,15 @@ public class TesteState extends BasicGameState{
 
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
+        if(status.equals("Intro")){
+            if(boss.checkStatus().equals("Game")){
+                guts.status="Game";
+                this.status="Game";
+            }
+           
+        }
         
-        if(guts.hp<=0)this.init(container, game);
+       if(guts.hp<=0)this.init(container, game);
 //        long t1 = System.currentTimeMillis();
 
 

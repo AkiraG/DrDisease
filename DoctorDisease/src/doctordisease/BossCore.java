@@ -22,7 +22,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 /**
  *
- * @author verratti.gfv
+ * @author saita
  */
 public class BossCore extends BossConcept {
     
@@ -37,9 +37,9 @@ public class BossCore extends BossConcept {
     
 
     
-    boolean isAtk;
+    boolean isAtk,takeHit;
     
-    int time=0,cd=1000;
+    int time,cd=1000,timeHit;
     
     
 
@@ -110,12 +110,13 @@ public class BossCore extends BossConcept {
     @Override
     public void draw(Graphics g) {
         laserList.forEach(laser -> laser.draw(g));
-        aBase.draw(location.getX(), location.getY());
+        if(takeHit)aBase.draw(location.getX(), location.getY(),Color.red);
+        else aBase.draw(location.getX(), location.getY());
         
 //        g.draw(hitbox);
     }
     
-     @Override
+    @Override
     public void draw(Graphics g, Color c) {
         aBase.draw(location.getX(), location.getY(),c);
     }
@@ -130,11 +131,19 @@ public class BossCore extends BossConcept {
                 aBase=aIntro02;
                 }
             if(aIntro02.isStopped()){
-                System.out.println("Idle");
                 status="Game";
                 aBase=aIdle;
             }
         }else if(status.equals("Game")){
+            System.out.println(takeHit);
+          if(takeHit){
+              timeHit+=delta;
+              if(timeHit>=100){
+
+                  timeHit=0;
+                  takeHit=false;
+              }
+          }
           if(isAtk){
               if(aAtkSet.isStopped()){
                   aBase.restart();
@@ -242,4 +251,11 @@ public class BossCore extends BossConcept {
         return aIntro01;
     }
     
+    public int takeHit(){
+        if(!takeHit){
+            takeHit=true;
+            if(this.isVulnerable())return 10;
+            else return 5;
+        }else return 0;
+    }
 }

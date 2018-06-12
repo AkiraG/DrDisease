@@ -17,7 +17,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 /**
  *
- * @author Gabriel
+ * @author saita
  */
 public class Boss {
     
@@ -56,7 +56,7 @@ public class Boss {
         
         status="Intro";
         stage=0;
-        hp=2000;
+        hp=1510;
         coreDamage=5f;
         bodyDamage=0.1f;
         blasterDamage=1f;
@@ -92,7 +92,8 @@ public class Boss {
     }
     
     public void draw(Graphics g){
-        partList.forEach(item -> item.draw(g));
+        if(status.equals("Intro"))partList.forEach(item -> item.draw(g, Color.gray));
+        else partList.forEach(item -> item.draw(g));
     }
     
     public void update(GameContainer gc, StateBasedGame sbg, int delta){
@@ -197,14 +198,18 @@ public class Boss {
         if(status.equals("Game")){
         lista.forEach(shoot -> {
             if(shoot.checkCollision(core.getHitbox())){
-                if(core.isVulnerable())hp-=coreDamage*2;
-                else hp-=coreDamage;
+                hp-=core.takeHit();
             }
             else if(shoot.checkCollision(body.getHitbox()))hp-=bodyDamage;
-            else if(shoot.checkCollision(blaster01.getHitbox()))hp-=blasterDamage;
-            else if(shoot.checkCollision(blaster02.getHitbox()))hp-=blasterDamage;
-            else if(shoot.checkCollision(blaster03.getHitbox()))hp-=blasterDamage;
-            else if(shoot.checkCollision(blaster04.getHitbox()))hp-=blasterDamage;
+            else {
+                blasterList.forEach(blaster -> {
+                    if(shoot.checkCollision(blaster.getHitbox())){
+                        hp-=blasterDamage;
+                        blaster.takeHit();
+                    }
+                    
+                });
+            }
         });
         }
     }
@@ -291,6 +296,10 @@ public class Boss {
     
     public void runIntro(){
         core.runAnimation();
+    }
+    
+    public String checkStatus(){
+        return status;
     }
     
 }

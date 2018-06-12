@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 package doctordisease;
-
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,14 +21,14 @@ import org.newdawn.slick.state.StateBasedGame;
 
 /**
  *
- * @author Gabriel
+ * @author saita
  */
 public class BossBlaster extends BossConcept {
     
     String typeAtk;
-    boolean isAtk,isShoot;
+    boolean isAtk,isShoot,takeHit;
     float targetAngle;
-    int speed,cdAtk,time,stepAngle;
+    int speed,cdAtk,time,timeHit,stepAngle;
     
     SpriteSheet bullet;
     SpriteSheet sIntro,sShoot;
@@ -90,11 +89,14 @@ public class BossBlaster extends BossConcept {
 
     @Override
     public void draw(Graphics g) {
+        
         shootList.forEach(bullet -> bullet.draw(g));
-        aBase.draw(location.getX(),location.getY());
-//        g.draw(hitbox);
+        if(takeHit)aBase.draw(location.getX(),location.getY(),Color.red);
+        else aBase.draw(location.getX(),location.getY());
+        g.draw(hitbox);
     }
-     @Override
+    
+    @Override
     public void draw(Graphics g, Color c) {
         shootList.forEach(bullet -> bullet.draw(g));
         aBase.draw(location.getX(),location.getY(),c);
@@ -104,6 +106,14 @@ public class BossBlaster extends BossConcept {
     @Override
     public void update(GameContainer gc, StateBasedGame sbg, int delta) {
         if(aIntro.isStopped())aBase=aShoot;
+        
+        if(takeHit){
+            timeHit+=delta;
+            if(timeHit>=100){
+                timeHit=0;
+                takeHit=false;
+            }
+        }
         
         time+=delta;
         shootList.removeIf(shoot -> shoot.checkAnimation());
@@ -273,6 +283,10 @@ public class BossBlaster extends BossConcept {
     
     public Animation checkAnimation(){
         return aIntro;
+    }
+    
+    public void takeHit(){
+        if(!takeHit)takeHit=true;
     }
 
    

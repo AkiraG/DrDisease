@@ -15,7 +15,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 /**
  *
- * @author Gabriel
+ * @author saita
  */
 public abstract class  BossConcept{
     

@@ -20,7 +20,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 /**
  *
- * @author Gabriel
+ * @author saita
  */
 public class BossBody extends BossConcept {
     SpriteSheet sBase;
@@ -48,7 +48,7 @@ public class BossBody extends BossConcept {
     @Override
     public void draw(Graphics g) {
         aBase.draw(location.getX(),location.getY());
-//        g.draw(hitbox);
+        g.draw(hitbox);
     }
      @Override
     public void draw(Graphics g, Color c) {

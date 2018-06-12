@@ -17,11 +17,11 @@ public class Player {
     
     Sound bulletSound;
     
-    int speed,cd,timer,timerFlash,cdHit;
+    int speed,cd,timer,timerHit,cdHit;
     
-    float hp;
+    float hp,alphaIntro;
     
-    boolean isOnCd,isAtk,takeHit,flashDraw;
+    boolean isOnCd,isAtk,takeHit;
     
     Point location;
     Vector2f direction;
@@ -34,6 +34,8 @@ public class Player {
     Animation aBase,aPropulsion,aPropulsionUp,aPropulsionIdle,aPropulsionDown;
     
     public Player(Point location, int speed) {
+        
+        alphaIntro=0f;
         
         status="Intro";
         
@@ -62,6 +64,12 @@ public class Player {
             aPropulsionIdle = new Animation(sPropulsion,0,0,4,0,true,60,true);
             aPropulsionDown = new Animation(sPropulsion,5,0,6,0,true,60,true);
             aPropulsion = aPropulsionIdle;
+            
+            aBase.getImage(0).setAlpha(alphaIntro);
+
+            for(int x=0;x<aPropulsion.getFrameCount()-1;x++){
+                aPropulsion.getImage(x).setAlpha(alphaIntro);
+            }
         
         } catch (SlickException ex) {
             Logger.getLogger(Player.class.getName()).log(Level.SEVERE, null, ex);
@@ -78,7 +86,7 @@ public class Player {
         });
         
 //        g.draw(hitbox);
-        if(flashDraw)aBase.drawFlash(location.getX(), location.getY(), aBase.getWidth(), aBase.getHeight());
+        if(takeHit)aBase.drawFlash(location.getX(), location.getY(), aBase.getWidth(), aBase.getHeight());
         else aBase.draw(location.getX(), location.getY());
         
         aPropulsion.draw(location.getX()+ 18, location.getY()+40);
@@ -88,28 +96,30 @@ public class Player {
     
     public void update(GameContainer gc, StateBasedGame sbg, int delta){
         if(status.equals("Intro")){
+            timer+=delta;
+            if(timer>=50 && alphaIntro<1){
+                timer=0;
+                alphaIntro+=0.01f;
+            }
+            aBase.getCurrentFrame().setAlpha(alphaIntro);
+            aPropulsion.getCurrentFrame().setAlpha(alphaIntro);
             
         }
         else if(status.equals("Game")){
+           
             
             hitbox.setLocation(location.getX(), location.getY());
 
             if(takeHit){
-                timer+=delta;
-                if(timer>=500){
-                    timer=0;
+                timerHit+=delta;
+                if(timerHit>=100){
+                    timerHit=0;
                     takeHit=false;
                 }
             }
-            if(flashDraw){
-                if(timer>=300)flashDraw=false;
-            }
-
-
 
 
             Input input = gc.getInput();
-
 
             if(input.isKeyDown(Input.KEY_LEFT) && !this.checkCollision(moveLimit.get(1)))
                 direction.set(direction.getX()-1,direction.getY());
@@ -133,7 +143,6 @@ public class Player {
                 aBase.setCurrentFrame(0);
             }
 
-
             this.move(delta);
             this.handleAtk();
 
@@ -147,11 +156,11 @@ public class Player {
     public void handleAtk(){
             if(aBase.getFrame()==2 && !isAtk){
                 shootList.add(new Projectile(new Point(location.getX()+37,location.getY()+12),new Vector2f(0,-600),sBullet));
-                //if(!bulletSound.playing())bulletSound.play();
+                if(!bulletSound.playing())bulletSound.play();
                 isAtk=!isAtk;
             }else if(aBase.getFrame()==3 && isAtk){
                 shootList.add(new Projectile(new Point(location.getX()+5,location.getY()+12),new Vector2f(0,-600),sBullet));
-                //if(!bulletSound.playing())bulletSound.play();
+                if(!bulletSound.playing())bulletSound.play();
                 isAtk=!isAtk;    
             }else if(aBase.getFrame()==5){
                 aBase.setCurrentFrame(2);   
@@ -176,12 +185,9 @@ public class Player {
     public void checkCollision(ArrayList<Projectile> shootList){
         if(status.equals("Game")){
         shootList.forEach(shoot -> {
-                if(!takeHit){
                     if(shoot.checkCollision(hitbox)){
-                        takeHit=true;flashDraw=true;
-                        hp-=5;
+                        this.takeHit(5);
                     }
-                }
             });
         }
     }
@@ -189,13 +195,9 @@ public class Player {
     public void checkLaserCollision(ArrayList<LaserShot> laserList){
         if(status.equals("Game")){
                 laserList.forEach(laser -> {
-                if(!takeHit){
                     if(laser.checkCollision(hitbox)){
-                        takeHit=true;
-                        flashDraw=true;
-                        hp-=20;
+                        this.takeHit(10);
                     }
-                }
             });
         }
         
@@ -217,6 +219,12 @@ public class Player {
     
     public ArrayList<Projectile> getShootList(){
         return shootList;
+    }
+    public void takeHit(int hp){
+        if(!takeHit){
+            takeHit=true;
+            this.hp-=hp;
+        }
     }
     
 }
