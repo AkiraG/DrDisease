@@ -284,6 +284,7 @@ public class Player {
     Método que atualiza o status de pause do player
     */
     public void pause() {
+        
         System.out.println("PlayerPaused");
         pause=!pause;
         aBase.setAutoUpdate(false);

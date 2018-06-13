@@ -35,6 +35,7 @@ public class Celulas extends BasicGameState {
     public void change() {
         num = (int) (Math.random() * 4);
         cell = cellLst[num];
+        
         switch (num) {
             case 0:
                 vel = 7;
@@ -67,12 +68,12 @@ public class Celulas extends BasicGameState {
 
     @Override
     public void update(GameContainer gc, StateBasedGame sbg, int i) throws SlickException {
-        posX += vel * 10 * (i/100f);
-        cell.rotate(5 * (i/10f));
+        posX += (vel*100) * (i/1000f);
+        cell.rotate(10 * (i/1000f));
         if (posX > DoctorDisease.WIDTH){
             posX = -200;
             posY = (int) (Math.random() * (600 - 100) + 50);
-            change();
+            //change();
         }
     }
 }
