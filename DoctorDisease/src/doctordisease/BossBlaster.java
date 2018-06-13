@@ -26,7 +26,7 @@ import org.newdawn.slick.state.StateBasedGame;
 public class BossBlaster extends BossConcept {
     
     String typeAtk;
-    boolean isAtk,isShoot,takeHit;
+    boolean isAtk,isShoot,takeHit,pause;
     float targetAngle;
     int speed,cdAtk,time,timeHit,stepAngle;
     
@@ -93,7 +93,7 @@ public class BossBlaster extends BossConcept {
         shootList.forEach(bullet -> bullet.draw(g));
         if(takeHit)aBase.draw(location.getX(),location.getY(),Color.red);
         else aBase.draw(location.getX(),location.getY());
-        g.draw(hitbox);
+        //g.draw(hitbox);
     }
     
     @Override
@@ -287,6 +287,17 @@ public class BossBlaster extends BossConcept {
     
     public void takeHit(){
         if(!takeHit)takeHit=true;
+    }
+    
+    @Override
+    public void pause(){
+        if(!pause){
+            aBase.setAutoUpdate(false);
+            pause=true;
+        }else{
+            aBase.setAutoUpdate(true);
+            pause=false;
+        }
     }
 
    

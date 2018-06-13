@@ -37,7 +37,7 @@ public class BossCore extends BossConcept {
     
 
     
-    boolean isAtk,takeHit;
+    boolean isAtk,takeHit,pause;
     
     int time,cd=1000,timeHit;
     
@@ -135,7 +135,6 @@ public class BossCore extends BossConcept {
                 aBase=aIdle;
             }
         }else if(status.equals("Game")){
-            System.out.println(takeHit);
           if(takeHit){
               timeHit+=delta;
               if(timeHit>=100){
@@ -258,4 +257,15 @@ public class BossCore extends BossConcept {
             else return 5;
         }else return 0;
     }
+    @Override
+    public void pause(){
+        if(!pause){
+            aBase.setAutoUpdate(false);
+            pause=true;
+        }else{
+            aBase.setAutoUpdate(true);
+            pause=false;
+        }
+    }
+    
 }

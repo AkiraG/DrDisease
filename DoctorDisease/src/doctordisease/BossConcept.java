@@ -50,4 +50,9 @@ public abstract class  BossConcept{
     public void setDirection(Vector2f direction){
         this.direction = direction;
     }
+    
+    public void pause(){
+        
+    }
+    
 }

@@ -107,6 +107,7 @@ public class Player {
         }
         else if(status.equals("Game")){
            
+            aPropulsion=aPropulsionIdle;
             
             hitbox.setLocation(location.getX(), location.getY());
 
@@ -225,6 +226,10 @@ public class Player {
             takeHit=true;
             this.hp-=hp;
         }
+    }
+    public void pause() {
+        aBase.setAutoUpdate(false);
+        aPropulsion.setAutoUpdate(false);
     }
     
 }

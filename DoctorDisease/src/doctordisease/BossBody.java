@@ -23,19 +23,36 @@ import org.newdawn.slick.state.StateBasedGame;
  * @author saita
  */
 public class BossBody extends BossConcept {
-    SpriteSheet sBase;
-    Animation aBase;
+    boolean pause;
+    
+    SpriteSheet sBase,sIntro;
+    Animation aBase,aIntro,aIntro02;
+    
+    String status;
 
     public BossBody(Point location) {
         super(location);
         
+        status="Intro";
+        
         try {
             
             sBase = new SpriteSheet("/data/image/Fase01/body-1-1-intro.png",616,208);
-            aBase= new Animation(sBase,60);
             
-            aBase.setAutoUpdate(false);
-            aBase.stopAt(41);
+            sIntro = new SpriteSheet("/data/image/Fase01/body-1-2-introt.png",616,208);
+            
+            aIntro= new Animation(sBase,60);
+            aIntro.setAutoUpdate(false);
+            aIntro.stopAt(41);
+            
+            aIntro02 = new Animation(sIntro,80);
+            aIntro02.setAutoUpdate(false);
+            aIntro02.stopAt(aIntro02.getFrameCount()-1);
+            
+            aBase=aIntro;
+     
+            
+           
             
         } catch (SlickException ex) {
             Logger.getLogger(BossBody.class.getName()).log(Level.SEVERE, null, ex);
@@ -48,7 +65,7 @@ public class BossBody extends BossConcept {
     @Override
     public void draw(Graphics g) {
         aBase.draw(location.getX(),location.getY());
-        g.draw(hitbox);
+    //    g.draw(hitbox);
     }
      @Override
     public void draw(Graphics g, Color c) {
@@ -58,10 +75,11 @@ public class BossBody extends BossConcept {
     @Override
     public void update(GameContainer gc, StateBasedGame sbg, int delta) {
         
+        
     }
     
     public void runIntro(){
-        aBase.setAutoUpdate(true);
+        aIntro.setAutoUpdate(true);
     }
     
     public Shape getHitbox(){
@@ -70,6 +88,22 @@ public class BossBody extends BossConcept {
     
     public Animation checkAnimation(){
         return aBase;
+    }
+    
+    public void runIntro02(){
+        aBase=aIntro02;
+        aBase.setAutoUpdate(true);
+        //super.setHitbox(new Rectangle(location.getX()+220,location.getY(),aBase.getWidth()/4,aBase.getHeight()));
+    }
+    @Override
+    public void pause(){
+        if(!pause){
+            aBase.setAutoUpdate(false);
+            pause=true;
+        }else{
+            aBase.setAutoUpdate(true);
+            pause=false;
+        }
     }
     
 }

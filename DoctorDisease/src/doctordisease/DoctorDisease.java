@@ -28,7 +28,6 @@ public class DoctorDisease extends StateBasedGame {
             {
 		app = new AppGameContainer(new DoctorDisease("Dr Disease"));
 		app.setDisplayMode(WIDTH, HEIGHT, false);
-                
                 //app.setTargetFrameRate(FPS);
 		app.start();
                 
@@ -41,8 +40,10 @@ public class DoctorDisease extends StateBasedGame {
 
     @Override
     public void initStatesList(GameContainer gc) throws SlickException {
-        this.addState(new TesteState(10));
-        this.enterState(10);
+        this.addState(new IntroState(0));
+        this.addState(new Menu(1));
+        this.addState(new Fase01(2));
+        this.enterState(2);
     }
     
 }

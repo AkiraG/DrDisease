@@ -56,7 +56,7 @@ public class Boss {
         
         status="Intro";
         stage=0;
-        hp=1510;
+        hp=2000;
         coreDamage=5f;
         bodyDamage=0.1f;
         blasterDamage=1f;
@@ -118,77 +118,88 @@ public class Boss {
             }
             
         }else if(status.equals("Game")){
-        if(hp>1500){
-            if(stage==0){
-                isCoreAtk=false;
-                stage++;
-            }
-            else if(!core.isAtk()){
-                this.attackSequenceL(0, 15, 600,200);
-                this.attackSequenceR(3, 15, 600,200);
+            
+            if(hp>1500){
+                if(stage==0){
+                    isCoreAtk=false;
+                    stage++;
                 }
-        }else if(hp>1000){
-            if(stage==1){
-                isCoreAtk=false;
-                stage++;
-            }
-            else if(!isCoreAtk){
-                this.stopBlasters();
-                this.coreAttack(0);//random core atk
-                
-            }else if(core.isAtk()){
-                this.directAttack(0, 45, 60, 400);
-                this.directAttack(1, 90, 60, 400);
-                this.directAttack(2, 90, 60, 400);
-                this.directAttack(3, 135, 60, 400);
+                else if(!core.isAtk()){
+                    this.attackSequenceL(0, 15, 600,200);
+                    this.attackSequenceR(3, 15, 600,200);
+                    }
+            }else if(hp>1000){
+                if(stage==1){
+                    isCoreAtk=false;
+                    stage++;
+                }
+                else if(!isCoreAtk){
+                    this.stopBlasters();
+                    this.coreAttack(0);//random core atk
 
-  
-            }else if(!core.isAtk()){
-                this.attackSequenceL(0, 15, 400,400);
-                this.attackSequenceR(3, 15, 400,400);
-                this.attackTarget(1, targetHitbox, 400, 1000);
-                this.attackTarget(2, targetHitbox, 400, 1000);
-            }      
-        }else if(hp>500){
-            if(stage==2){
-                isCoreAtk=false;
-                stage++;
-            }else if(!isCoreAtk){
-                this.stopBlasters();
-                this.coreAttack(1);
-            }else if(core.isAtk()){
-                this.directAttack(0, 45, 60, 700);
-                this.directAttack(1, 100, 60, 400);
-                this.directAttack(2, 80, 60, 400);
-                this.directAttack(3, 135, 60, 700);    
-             
-            }else if(!core.isAtk()){
-                this.attackSequenceR(0, 10, 400,300);
-                this.attackSequenceL(3, 10, 400,300);
-                this.attackTarget(1, targetHitbox, 500, 1000);
-                this.attackTarget(2, targetHitbox, 500, 1000);
+                }else if(core.isAtk()){
+                    this.directAttack(0, 45, 60, 400);
+                    this.directAttack(1, 90, 60, 400);
+                    this.directAttack(2, 90, 60, 400);
+                    this.directAttack(3, 135, 60, 400);
+
+
+                }else if(!core.isAtk()){
+                    this.attackSequenceL(0, 15, 400,400);
+                    this.attackSequenceR(3, 15, 400,400);
+                    this.attackTarget(1, targetHitbox, 400, 1000);
+                    this.attackTarget(2, targetHitbox, 400, 1000);
+                }      
+            }else if(hp>500){
+                if(stage==2){
+                    isCoreAtk=false;
+                    stage++;
+                }else if(!isCoreAtk){
+                    this.stopBlasters();
+                    this.coreAttack(1);
+                }else if(core.isAtk()){
+                    this.directAttack(0, 45, 60, 700);
+                    this.directAttack(1, 100, 60, 400);
+                    this.directAttack(2, 80, 60, 400);
+                    this.directAttack(3, 135, 60, 700);    
+
+                }else if(!core.isAtk()){
+                    this.attackSequenceR(0, 10, 400,300);
+                    this.attackSequenceL(3, 10, 400,300);
+                    this.attackTarget(1, targetHitbox, 500, 1000);
+                    this.attackTarget(2, targetHitbox, 500, 1000);
+                }
+            }else if(hp>0){
+                if(stage==3){
+                    isCoreAtk=false;
+                    stage++;
+                }else if(!isCoreAtk){
+                    this.stopBlasters();
+                    this.coreAttack(2);
+                }else if(core.isAtk()){
+
+                    this.directAttack(0, 35, 60, 1000);
+                    this.directAttack(1, 90, 60, 800);
+                    this.directAttack(2, 90, 60, 800);
+                    this.directAttack(3, 145, 60, 1000);      
+
+                }else if(!core.isAtk()){
+                    this.attackSequenceL(0,3,100,700);
+                    this.attackSequenceR(3,3,100,700);
+                    this.attackSequenceL(2,3,100,700);
+                    this.attackSequenceR(1,3,100,700);  
+                }
+        }else if(hp<=0){
+            for(int x=0;x<4;x++){
+                blasterList.get(x).cancelAttack();
+                partList.remove(0);
             }
-        }else if(hp>0){
-            if(stage==3){
-                isCoreAtk=false;
-                stage++;
-            }else if(!isCoreAtk){
-                this.stopBlasters();
-                this.coreAttack(2);
-            }else if(core.isAtk()){
-                
-                this.directAttack(0, 35, 60, 1000);
-                this.directAttack(1, 90, 60, 800);
-                this.directAttack(2, 90, 60, 800);
-                this.directAttack(3, 145, 60, 1000);      
-                
-            }else if(!core.isAtk()){
-                this.attackSequenceL(0,3,100,700);
-                this.attackSequenceR(3,3,100,700);
-                this.attackSequenceL(2,3,100,700);
-                this.attackSequenceR(1,3,100,700);  
-            }
+            body.runIntro02();
+            
+            this.status="GameOver";
+            
         }else if(status.equals("GameOver")){
+
             
         }
         }
@@ -300,6 +311,10 @@ public class Boss {
     
     public String checkStatus(){
         return status;
+    }
+    
+    public void pause(){
+        partList.forEach(part -> part.pause());
     }
     
 }
