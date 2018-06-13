@@ -127,6 +127,8 @@ public class Fase01 extends BasicGameState implements InputProviderListener{
                 public void componentActivated(AbstractComponent arg0) {
                         //provider.removeListener(Fase01.this);
                         pause = !pause;
+                        if(pause)DoctorDisease.app.pause();
+                        else DoctorDisease.app.resume();
                         guts.pause();
                         boss.pause();
                     try {
