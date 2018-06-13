@@ -20,6 +20,8 @@ import org.newdawn.slick.state.StateBasedGame;
 
 /**
  *
+ * 
+ * Classe criada para lidar com o corpo do Boss
  * @author saita
  */
 public class BossBody extends BossConcept {
@@ -77,33 +79,41 @@ public class BossBody extends BossConcept {
         
         
     }
-    
+    /*
+    Método que inicia a animação de intro do corpo do Boss
+    */
     public void runIntro(){
         aIntro.setAutoUpdate(true);
     }
-    
+    /*
+    Método que retorna a Hitbox do corpo do Boss
+    */
     public Shape getHitbox(){
         return hitbox;
     }
-    
+    /*
+    Método que retorna a animação atual do corpo do Boss
+    */
     public Animation checkAnimation(){
         return aBase;
     }
-    
+    /*
+    Método que inicia a 2º parte da Intro do corpo do Boss
+    */
     public void runIntro02(){
         aBase=aIntro02;
         aBase.setAutoUpdate(true);
         //super.setHitbox(new Rectangle(location.getX()+220,location.getY(),aBase.getWidth()/4,aBase.getHeight()));
     }
+    
+     /*
+    Método que atualiza o status de pause do corpo do Boss
+    */
     @Override
     public void pause(){
-        if(!pause){
-            aBase.setAutoUpdate(false);
-            pause=true;
-        }else{
-            aBase.setAutoUpdate(true);
-            pause=false;
-        }
+        pause=!pause;
+        aBase.setAutoUpdate(!pause);
+
     }
     
 }

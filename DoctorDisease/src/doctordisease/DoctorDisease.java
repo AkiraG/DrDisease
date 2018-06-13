@@ -27,7 +27,7 @@ public class DoctorDisease extends StateBasedGame {
         try
             {
 		app = new AppGameContainer(new DoctorDisease("Dr Disease"));
-		app.setDisplayMode(WIDTH, HEIGHT, false);
+		app.setDisplayMode(WIDTH, HEIGHT, true);
                 //app.setTargetFrameRate(FPS);
 		app.start();
                 
@@ -37,13 +37,14 @@ public class DoctorDisease extends StateBasedGame {
 		Logger.getLogger(DoctorDisease.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
+    
     @Override
     public void initStatesList(GameContainer gc) throws SlickException {
         this.addState(new IntroState(0));
         this.addState(new Menu(1));
         this.addState(new Fase01(2));
-        this.enterState(2);
+        this.addState(new GameOver(3));
+        this.enterState(0);
     }
     
 }

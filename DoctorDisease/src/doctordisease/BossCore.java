@@ -13,6 +13,7 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
 import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Point;
@@ -29,7 +30,7 @@ public class BossCore extends BossConcept {
     ArrayList<LaserShot> laserList;
     
     String status;
-    
+    Sound laser;
     int atkType;
     
     SpriteSheet sIntro01,sIntro02,sIdle,sAtkSet,sAtkChrg,sAtkShoot,sAtkCd,sAtkReset;
@@ -53,7 +54,7 @@ public class BossCore extends BossConcept {
         isAtk=false;
         
         try {
-
+            laser= new Sound("data/sound/Fase01/Laser_Full.ogg");
             sIntro01 = new SpriteSheet("data/image/Fase01/core-1-1-intro-pt1.png", 128, 128);
             sIntro02 = new SpriteSheet("data/image/Fase01/core-1-1-intro-pt2.png", 128, 128);
             sIdle = new SpriteSheet("data/image/Fase01/core-1-1-idle.png", 128, 128);
@@ -150,6 +151,8 @@ public class BossCore extends BossConcept {
                   aBase=aAtkChrg;
                   aBase.setAutoUpdate(true);
               }else if(aAtkChrg.isStopped()){
+                  if(!laser.playing())laser.play(0.9f,0.5f);
+                  //playlaser
                   time+=1;
                   if(time>=10){
                         time=0;
@@ -259,13 +262,9 @@ public class BossCore extends BossConcept {
     }
     @Override
     public void pause(){
-        if(!pause){
-            aBase.setAutoUpdate(false);
-            pause=true;
-        }else{
-            aBase.setAutoUpdate(true);
-            pause=false;
-        }
+        pause=!pause;
+        aBase.setAutoUpdate(!pause);
+
     }
     
 }

@@ -11,6 +11,11 @@ import org.newdawn.slick.geom.Shape;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.*;
 
+/*
+Classe do personagem jogável,onde consta todos os atributos referentes ao player como , animação
+posicionamento, velocidade, disparo de projéteis, vida etc...
+*/
+
 public class Player {
     
     String status;
@@ -21,7 +26,7 @@ public class Player {
     
     float hp,alphaIntro;
     
-    boolean isOnCd,isAtk,takeHit;
+    boolean isOnCd,isAtk,takeHit,pause;
     
     Point location;
     Vector2f direction;
@@ -33,6 +38,10 @@ public class Player {
     SpriteSheet sBase,sPropulsion,sBullet;
     Animation aBase,aPropulsion,aPropulsionUp,aPropulsionIdle,aPropulsionDown;
     
+    /*
+    Constructor da classe player baseado em um ponto de coordenada no plano cartesiano e a velocidade dos projéteis,
+    Os demais atributos como animações e sons, foram estabelecidas como padrão por isso não entra como parâmetro.
+    */
     public Player(Point location, int speed) {
         
         alphaIntro=0f;
@@ -78,7 +87,10 @@ public class Player {
         hitbox = new Rectangle(location.getX(),location.getY(),aBase.getWidth(),aBase.getHeight());
         direction=new Vector2f(0,0);
     }
-    
+    /*
+    Método chamado para desenhar o player e seus respectivos projéteis pelo contexto gráfico,
+    com a opção de desenhar a hitbox para efeito de debug etc..
+    */
     public void draw(Graphics g){
         
         shootList.forEach(shoot -> {
@@ -93,8 +105,14 @@ public class Player {
         
   
     }
-    
+    /*
+    Método responsável por atualizar os principais atributos do player como (posição, animação atual) e também contém o 
+    Scanner do teclado referente a este player
+    */
     public void update(GameContainer gc, StateBasedGame sbg, int delta){
+        if(pause){
+            
+        }else{
         if(status.equals("Intro")){
             timer+=delta;
             if(timer>=50 && alphaIntro<1){
@@ -150,24 +168,31 @@ public class Player {
             shootList.forEach(bullet -> bullet.update(delta));
 
             shootList.removeIf(bullet -> bullet.checkAnimation());
-        }   
+        } 
+        }
         
     }
-    
+    /*
+    Método responsável para lidar com os ataques do player baseado em sua animação de ataque,também faz com que o som do 
+    tiro seja executado e adiciona os projéteis criados na lista de projéteis
+    */
     public void handleAtk(){
             if(aBase.getFrame()==2 && !isAtk){
                 shootList.add(new Projectile(new Point(location.getX()+37,location.getY()+12),new Vector2f(0,-600),sBullet));
-                if(!bulletSound.playing())bulletSound.play();
+                if(!bulletSound.playing())bulletSound.play(1, 0.2f);
                 isAtk=!isAtk;
             }else if(aBase.getFrame()==3 && isAtk){
                 shootList.add(new Projectile(new Point(location.getX()+5,location.getY()+12),new Vector2f(0,-600),sBullet));
-                if(!bulletSound.playing())bulletSound.play();
+                if(!bulletSound.playing())bulletSound.play(1, 0.2f);
                 isAtk=!isAtk;    
             }else if(aBase.getFrame()==5){
                 aBase.setCurrentFrame(2);   
             }  
     }
-    
+    /*
+    Método responsável para atualizar a posição do player baseado no vetor que foi setado de acordo com 
+    as teclas pressionadas anteriormente e após isso reseta o vetor para uma nova verificação
+    */
     public void move(int delta){
         
         location.setX(location.getX()+(float)(direction.getX()*(speed * delta/1000.0)));
@@ -175,14 +200,19 @@ public class Player {
         direction.set(0,0);
         
     }
-    
+    /*
+    Método responsável por lidar com a colisão entre algum objeto e a hitbox do player
+    */
     public boolean checkCollision(Shape c){
         if(status.equals("Game")){
             return hitbox.intersects(c);
         }
         return false;
     }
-    
+    /*
+    Método responsável por lidar com a colisão de projéteis a partir de uma lista com o hitbox do player e 
+    atualiza o hp caso haja colisão
+    */
     public void checkCollision(ArrayList<Projectile> shootList){
         if(status.equals("Game")){
         shootList.forEach(shoot -> {
@@ -192,44 +222,62 @@ public class Player {
             });
         }
     }
-    
+    /*
+    Método responsável por lidar com a colisão de lasers a partir de uma lista com o hitbox do player 
+    */
     public void checkLaserCollision(ArrayList<LaserShot> laserList){
         if(status.equals("Game")){
                 laserList.forEach(laser -> {
                     if(laser.checkCollision(hitbox)){
-                        this.takeHit(10);
+                        this.takeHit(8);
                     }
             });
         }
         
     }
-    
+    /*
+    Método que retorna true caso haja a colisão dos tiros do player com alguma hitbox
+    */
     public void checkBulletCollision(Shape c){
         
         if(status.equals("Game"))shootList.forEach(bullet -> bullet.checkCollision(c));
         
     }
-    
+    /*
+    Método que retorna a hitbox do player
+    */
     public Shape getHitbox(){
         return hitbox;
     }
-    
+    /*
+    Método que seta o limite espacial que o player poderá percorrer a partir de uma lista de Linhas
+    */
     public void setLimits(ArrayList<Line> c){
         this.moveLimit=c;
     }
-    
+    /*
+    Método que retorna a lista que armazena os projéteis do player
+    */
     public ArrayList<Projectile> getShootList(){
         return shootList;
     }
+    /*
+    Método que atualiza o hp do player com o valo de entrada referente ao dano que ele receberá
+    */
     public void takeHit(int hp){
         if(!takeHit){
             takeHit=true;
             this.hp-=hp;
         }
     }
+    /*
+    Método que atualiza o status de pause do player
+    */
     public void pause() {
+        System.out.println("PlayerPaused");
+        pause=!pause;
         aBase.setAutoUpdate(false);
-        aPropulsion.setAutoUpdate(false);
+        aPropulsion.setAutoUpdate(false);  
     }
     
 }

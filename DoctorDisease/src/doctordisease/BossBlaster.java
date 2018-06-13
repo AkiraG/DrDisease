@@ -12,6 +12,7 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
 import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Point;
@@ -20,10 +21,11 @@ import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
 /**
- *
+ *Classe criada para controlar o blaster (arma) do Boss
  * @author saita
  */
 public class BossBlaster extends BossConcept {
+    Sound shoot;
     
     String typeAtk;
     boolean isAtk,isShoot,takeHit,pause;
@@ -36,12 +38,15 @@ public class BossBlaster extends BossConcept {
     
     ArrayList<Projectile> shootList;
     
+    
 
     public BossBlaster(Point location, Vector2f direction,int speed) {
         
         super(location, direction);
         
         this.speed=speed;
+        
+        
         
         typeAtk="N";
         time=0;
@@ -52,6 +57,8 @@ public class BossBlaster extends BossConcept {
         cdAtk=100;
         
         try {
+            
+            shoot= new Sound("data/sound/Fase01/Slime.ogg");
             bullet=new SpriteSheet("data/image/Fase01/bulletboss.png",40,40);
             
             sIntro=new SpriteSheet("data/image/Fase01/blaster-1-1-intro.png", 52, 52);
@@ -173,57 +180,78 @@ public class BossBlaster extends BossConcept {
         
 
         if(!isShoot && aShoot.getFrame()==4){
+            //if(!shoot.playing())shoot.play(0.2f,1f);
             shootList.add(new Projectile(new Point(location.getX(),location.getY()+aBase.getCurrentFrame().getHeight()/2),
                     new Vector2f(direction.getX(),direction.getY()).scale(speed),bullet)); 
             isShoot=true;
         }
         
     }
-    
+    /*
+    Método que configura a rotação do blaster
+    */
     public void setAngle(float angle){
         direction.setTheta((double) angle); 
     }
-    
+    /*
+    Método que executa um ataque do blaster
+    */
     public void directAttack(){
         
         isAtk=true;
         aBase.setAutoUpdate(true);
     }
-    
+    /*
+    Método que executa um ataque do blaster baseado em um ângulo de disparo
+    */
     public void directAttack(float angle){
         
         this.setAngle(angle);
         this.directAttack();
     }
-    
+    /*
+    Método que checa as colisões entre a lista de projéteis deste blaster com alguma hitbox
+    */
     public void checkBulletCollision(Shape c){
         shootList.forEach(shoot -> shoot.checkCollision(c));  
     }
-    
+    /*
+    Método que retorna a hitbox deste blaster
+    */
     public Shape getHitbox(){
         return hitbox;
     }
-    
+    /*
+    Método que configura a posição desse blaster baseada em um ponto no plano
+    */
     public void setLocation(Point p){
         location.setX(p.getX());
         location.setY(p.getY());
         hitbox.setLocation(location.getX(), location.getY()); 
     }
-    
+    /*
+    Método que configura a posição desse blaster baseada em uma coordenada x,y
+    */
     public void setLocation(int x, int y){
         location.setX(x);
         location.setY(y);
         hitbox.setLocation(location.getX(), location.getY()); 
         
     }
-    
+    /*
+    Método que cancela a animação de ataque deste blaster;
+    */
     public void cancelAttack(){
         isShoot=false;
         isAtk=false;
         aBase.setAutoUpdate(false);
         aBase.restart();
     }
-    
+    /*
+    Método que cria uma sequência de ataques baseada em um ângulo de início, ângulo final
+    cooldown entre os ataques e passo de rotação dos ataques em que ele auto regula se vai ser 
+    sentido horário ou antihorário
+    */
     public void sequenceAttack(float angleStart , float angleEnd , int cd, int step){
         
         if(!isAtk){
@@ -243,7 +271,9 @@ public class BossBlaster extends BossConcept {
             
         }
     }
-    
+    /*
+    Método que cria um ataque direcionado baseado em uma hitbox
+    */
     public void targetAttack(Shape t){
         if(!isAtk){
             isAtk=true;
@@ -253,7 +283,10 @@ public class BossBlaster extends BossConcept {
             typeAtk="Target";
         }
     }
-    
+    /*
+    Método que cria uma sequência de ataques contínuos baseada em um ângulo de disparo
+    cooldown entre os ataques e a velocidade dos projéteis
+    */
     public void continuousAttack(float angle,int cd, int speed){
         if(!isAtk){
             isAtk=true;
@@ -264,40 +297,50 @@ public class BossBlaster extends BossConcept {
             
         }
     }
-    
+    /*
+    Método que configura o cooldown entre os ataques
+    */
     public void setCdAtk(int cd){
         this.cdAtk=cd;
     }
-    
+    /*
+    Método que retorna a lista de projéteis que esse blaster armazena
+    */
     public ArrayList<Projectile> getShootList(){
         return this.shootList;
     }
-    
+    /*
+    Método que retorna se este blaster está atacando no momento
+    */
     public boolean isAtk(){
         return isAtk;
     }
-    
+    /*
+    Método que inicia a animação de Intro
+    */
     public void runIntro(){
         aIntro.setAutoUpdate(true);
     }
-    
+    /*
+    Método que retorna a animação de Intro
+    */
     public Animation checkAnimation(){
         return aIntro;
     }
-    
+    /*
+    Método que seta se o blaster está sendo atacado
+    */
     public void takeHit(){
         if(!takeHit)takeHit=true;
     }
-    
+    /*
+    Método que atualiza o status de pause do player
+    */
     @Override
-    public void pause(){
-        if(!pause){
-            aBase.setAutoUpdate(false);
-            pause=true;
-        }else{
-            aBase.setAutoUpdate(true);
-            pause=false;
-        }
+    public void pause(){ 
+            pause=!pause;
+            aBase.setAutoUpdate(!pause);
+  
     }
 
    

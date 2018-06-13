@@ -8,6 +8,7 @@ package doctordisease;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -20,7 +21,6 @@ import org.newdawn.slick.command.InputProviderListener;
 import org.newdawn.slick.command.KeyControl;
 import org.newdawn.slick.geom.Line;
 import org.newdawn.slick.geom.Point;
-import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.gui.AbstractComponent;
 import org.newdawn.slick.gui.ComponentListener;
 import org.newdawn.slick.gui.MouseOverArea;
@@ -36,7 +36,8 @@ import org.newdawn.slick.state.transition.FadeOutTransition;
 public class Fase01 extends BasicGameState implements InputProviderListener{
     
     String status;
-
+    
+    Image hp,health;
     ArrayList<Line> EDGEmovement;
     ArrayList<Line> EDGE;
     
@@ -53,7 +54,7 @@ public class Fase01 extends BasicGameState implements InputProviderListener{
     
     Image img_quitPT[], img_quitENG[] ,img_menuPTENG[];
     
-    boolean pause;
+    boolean pause,listener,active;
     
     MouseOverArea bt_quitPT,bt_quitENG,bt_menuPTENG;
 
@@ -68,15 +69,20 @@ public class Fase01 extends BasicGameState implements InputProviderListener{
 
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException {
+        
+        hp = new Image("data/image/Fase01/hp.png");
+        
+        health = new Image ("data/image/Fase01/health.png");
+        
         EDGEmovement = new ArrayList <>();
-         EDGE = new ArrayList<>();
+        EDGE = new ArrayList<>();
         time=0;
         
         esc = new BasicCommand("esc");
         
         pause=false;
         
-        guts = new Player(new Point(512,500),300);
+        guts = new Player(new Point(490,500),300);
         boss = new Boss(new Point(204,0));
         
         
@@ -119,17 +125,30 @@ public class Fase01 extends BasicGameState implements InputProviderListener{
 
                 @Override
                 public void componentActivated(AbstractComponent arg0) {
+                        //provider.removeListener(Fase01.this);
                         pause = !pause;
                         guts.pause();
                         boss.pause();
-                        game.enterState(1);
+                    try {
+                        game.getState(1).init(container, game);
+                    } catch (SlickException ex) {
+                        Logger.getLogger(Fase01.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                        game.enterState(1,new FadeOutTransition(new Color (0,0,0)) ,new FadeInTransition(new Color (0,0,0)));
+                        DoctorDisease.gameState = 1;
+                        provider.setActive(false);
 
                 }
             });
             bt_menuPTENG.setMouseOverImage(img_menuPTENG[1]);
             
         provider = new InputProvider(container.getInput());
-        provider.addListener(this);
+        this.addListener();
+        if(!active){
+            provider.setActive(false);
+            active=true;
+        }else provider.setActive(true);
+        
         provider.bindCommand(new KeyControl(Input.KEY_ESCAPE), esc);
         
         background = new Image("data/image/Fase01/background-stomach.png");
@@ -158,12 +177,15 @@ public class Fase01 extends BasicGameState implements InputProviderListener{
         background.draw();
         boss.draw(g);
         guts.draw(g);  
-        g.drawString(Float.toString(boss.hp), 50, 50);
-        g.drawString(Float.toString(guts.hp),900,50);
+//        g.drawString(Float.toString(boss.hp), 50, 50);
+//        g.drawString(Float.toString(guts.hp),900,50);
+        hp.drawCentered(512, 720);
+        health.draw(267, 700,guts.hp/100*490 , 40);
+        
         if(pause){
             boxPause.draw(112,200, 800, 300);
             bt_menuPTENG.render(container, g);
-            if(Button.language==0){
+            if(Button.estados[1]==0){
                 pausePT.drawCentered(512, 270);
                 bt_quitPT.render(container, g);
             }
@@ -177,8 +199,16 @@ public class Fase01 extends BasicGameState implements InputProviderListener{
 
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
+        if(guts.hp<=0 || boss.body.aIntro02.isStopped()){
+            game.getState(3).init(container, game);
+            game.enterState(3,new FadeOutTransition(new Color (0,0,0)) ,new FadeInTransition(new Color (0,0,0)));
+        }
         if(pause){
-            
+            Input input = container.getInput();
+            if(input.isKeyPressed(Input.KEY_ENTER)){
+                game.getState(1).init(container, game);
+                game.enterState(1);
+            }
         }
         else{
         if(status.equals("Intro")){
@@ -216,10 +246,10 @@ public class Fase01 extends BasicGameState implements InputProviderListener{
     @Override
     public void controlPressed(Command command) {
            if (command.toString().contains("esc")) {
-               System.out.println("PRESSED");
-            pause = !pause;
-            guts.pause();
-            boss.pause();
+               System.out.println("TESTE");
+                pause = !pause;
+                guts.pause();
+                boss.pause();
             }
     }
 
@@ -228,6 +258,13 @@ public class Fase01 extends BasicGameState implements InputProviderListener{
 
             
         
+    }
+    
+    public void addListener(){
+        if(!listener)
+            System.out.println("AddLISTENER");
+            provider.addListener(this);
+            listener=true;
     }
 
 }

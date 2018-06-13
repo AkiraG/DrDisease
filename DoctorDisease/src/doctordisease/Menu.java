@@ -15,8 +15,11 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Sound;
 import org.newdawn.slick.TrueTypeFont;
 import java.awt.Font;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
+import org.newdawn.slick.state.transition.FadeInTransition;
+import org.newdawn.slick.state.transition.FadeOutTransition;
 import org.newdawn.slick.util.ResourceLoader;
 
 /**
@@ -151,8 +154,11 @@ public class Menu extends BasicGameState {
                                     
                 break;                
             case 2:
-                sbg.enterState(2);
+                Button.estados[0]=0;
                 DoctorDisease.gameState = 2;
+                sbg.getState(2).init(gc, sbg);
+                sbg.enterState(2,new FadeOutTransition(new Color (0,0,0)) ,new FadeInTransition(new Color (0,0,0)));
+                
                 break;
             case 3: // Quit - Fecha o jogo
                 DoctorDisease.gameRunning = false;

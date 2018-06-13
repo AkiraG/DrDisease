@@ -17,6 +17,8 @@ import org.newdawn.slick.state.StateBasedGame;
 
 /**
  *
+ * 
+ * Classe criada para fazer a interação das demais partes do Boss da Fase 01
  * @author saita
  */
 public class Boss {
@@ -29,7 +31,7 @@ public class Boss {
     Shape targetHitbox;
     
     float hp,coreDamage,bodyDamage,blasterDamage;
-    boolean isAtk,isCoreAtk;
+    boolean isAtk,isCoreAtk,pause;
     String typeAtk;
     float targetAngle;
     
@@ -56,7 +58,7 @@ public class Boss {
         
         status="Intro";
         stage=0;
-        hp=2000;
+        hp=1510;
         coreDamage=5f;
         bodyDamage=0.1f;
         blasterDamage=1f;
@@ -90,14 +92,22 @@ public class Boss {
         partList.add(core);
          
     }
-    
+     /*
+    Método chamado para desenhar o Boss da Fase01 e suas partes como um todo
+    */
     public void draw(Graphics g){
         if(status.equals("Intro"))partList.forEach(item -> item.draw(g, Color.gray));
         else partList.forEach(item -> item.draw(g));
     }
-    
+    /*
+    Método que cuida da atualização de toda lógica envolvendo o Boss e suas partes, como rodar animações de intro,transformações
+    e realizar os padrões de ataques
+    */
     public void update(GameContainer gc, StateBasedGame sbg, int delta){
+        if(pause){
+            
         
+        }else{
         time+=delta;
         partList.forEach(item -> item.update(gc, sbg, delta));
 
@@ -203,8 +213,11 @@ public class Boss {
             
         }
         }
+        }
     }
-    
+    /*
+    Método que checa a colisão dos ataques recebidos pelo boss em forma de projéteis
+    */
     public void checkCollision(ArrayList<Projectile> lista){
         if(status.equals("Game")){
         lista.forEach(shoot -> {
@@ -224,7 +237,9 @@ public class Boss {
         });
         }
     }
-    
+    /*
+    Método que checa a colisão dos ataques do Boss na forma de projéteis com alguma hitbox
+    */
     public void checkBulletCollision(Shape c){
         if(status.equals("Game")){
         blaster01.checkBulletCollision(c);
@@ -233,55 +248,79 @@ public class Boss {
         blaster04.checkBulletCollision(c);
         }
     }
-   
+    /*
+    Método que cria uma sequência randômica de ataque nos blaster 1 e 4
+    */
     public void attackSequence(){
         int cd = (int)(Math.random()*500);
         int stepAngle = (int)((Math.random()*20)+5);
             blasterList.get(0).sequenceAttack(45,135,cd, stepAngle);
             blasterList.get(3).sequenceAttack(135,45,cd, stepAngle);    
     }
-    
+    /*
+    Método que cria um ataque direto baseado no blaster, ângulo de ataque, cooldown entre os ataques e velocidade dos projéteis
+    */
     public void directAttack(int blaster, float angle , int cd, int speed){
         
         blasterList.get(blaster).continuousAttack(angle, cd, speed);
         
     }
-    
+    /*
+    Método que cria uma sequência de ataques baseada em um ângulo inicial e final,o blaster que irá atacar, qual o passo de
+    rotação de cada ataque e o cooldown entre os ataques
+    */
     public void attackSequence(float startAngle,float finalAngle,int blaster,int step, int cd){
         blasterList.get(blaster).sequenceAttack(startAngle, finalAngle, cd, step);
         
     }
-    
+    /*
+    Método que cria uma sequência de ataques com ângulo final e inicial fixo, fazendo com que o blaster percorra um caminho
+    no sentido horário
+    */
     public void attackSequenceR(int blaster,int step,int cd , int speed){
         blasterList.get(blaster).sequenceAttack(45,135, cd, step);
         blasterList.get(blaster).speed=speed;
         
     }
-    
+     /*
+    Método que cria uma sequência de ataques com ângulo final e inicial fixo, fazendo com que o blaster percorra um caminho
+    no sentido anti-horário
+    */
     public void attackSequenceL(int blaster,int step,int cd, int speed){
         blasterList.get(blaster).sequenceAttack(135,45,cd,step);
         blasterList.get(blaster).speed=speed;
     }
-    
+    /*
+    Método que cria um ataque dos blasters 2 e 3, em direção a um alvo(hitbox) específico.
+    */
     public void attackTarget(Shape t){
             blasterList.get(1).targetAttack(t);
             blasterList.get(2).targetAttack(t);
     }
-    
+    /*
+    Método que cria um ataque  em direção a um alvo(hitbox) específico com a configuração de.
+    qual blaster irá atacar, qual a velocidade do tiro, e o cooldown entre os ataques
+    */
     public void attackTarget(int blaster , Shape t , int speed , int cd){
         blasterList.get(blaster).setCdAtk(cd);
         blasterList.get(blaster).speed=speed;
         blasterList.get(blaster).targetAttack(t);
     }
-    
+    /*
+    Método que lida com o Hp retirando uma quantidade baseado na entrada
+    */
     public void takeDamage(int damage){
         this.hp -= damage;
     }
-    
+    /*
+    Método que configura o hitbox alvo do boss
+    */
     public void setTarget(Shape c){
         this.targetHitbox=c;
     }
-    
+    /*
+    Método que retorna a lista onde o Boss armazena seus ataques de projéteis ativos
+    */
     public ArrayList<Projectile> getShootList(){
         ArrayList<Projectile> shootList = new ArrayList<>();
         blasterList.forEach(blaster -> {
@@ -289,32 +328,47 @@ public class Boss {
         });
         return shootList;
     }
-    
+    /*
+    Método que retorna a lista onde o Boss armazena seus ataques de Lasers ativos
+    */
     public ArrayList<LaserShot> getLaserList(){
         return core.getLaserList();
     }
-    
+    /*
+    Método que inicia o ataque especial do núcleo do boss
+    */
     public void coreAttack(int a){
         if(!isCoreAtk){
             isCoreAtk=true;
             core.coreAtk(a);
         }
     }
-    
+    /*
+    Método que para qualquer sequência de ataque iniciada
+    */
     public void stopBlasters(){
         blasterList.forEach(blaster -> blaster.cancelAttack());
     }
-    
+    /*
+    Método utilizado para rodar a animação de introdução do núcleo
+    */
     public void runIntro(){
         core.runAnimation();
     }
-    
+    /*
+    Método que retorna a variável que demonstra o estado atual de gameplay que o boss se encontra (Intro,Game,etc..)
+    */
     public String checkStatus(){
         return status;
     }
-    
+     /*
+    Método que atualiza o status de pause do Boss
+    */
     public void pause(){
-        partList.forEach(part -> part.pause());
+        
+            pause=!pause;
+            partList.forEach(part -> part.pause());
+
     }
     
 }
