@@ -58,7 +58,7 @@ public class Boss {
         
         status="Intro";
         stage=0;
-        hp=1510;
+        hp=2000;
         coreDamage=5f;
         bodyDamage=0.1f;
         blasterDamage=1f;

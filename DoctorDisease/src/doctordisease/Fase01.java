@@ -246,8 +246,10 @@ public class Fase01 extends BasicGameState implements InputProviderListener{
     @Override
     public void controlPressed(Command command) {
            if (command.toString().contains("esc")) {
-               System.out.println("TESTE");
+               
                 pause = !pause;
+                if(pause)DoctorDisease.app.pause();
+                else DoctorDisease.app.resume();
                 guts.pause();
                 boss.pause();
             }

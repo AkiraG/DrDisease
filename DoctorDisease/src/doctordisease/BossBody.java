@@ -60,7 +60,7 @@ public class BossBody extends BossConcept {
             Logger.getLogger(BossBody.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        super.setHitbox(new Rectangle(location.getX(),location.getY(),aBase.getWidth(),aBase.getHeight()/2));
+        super.setHitbox(new Rectangle(location.getX(),location.getY(),aBase.getWidth(),aBase.getHeight()/3.5f));
         
     }
 

@@ -18,6 +18,10 @@ posicionamento, velocidade, disparo de projéteis, vida etc...
 
 public class Player {
     
+    GameContainer gc;
+    StateBasedGame sbg;
+    int deltaUpdate;
+    
     String status;
     
     Sound bulletSound;
@@ -31,7 +35,6 @@ public class Player {
     Point location;
     Vector2f direction;
     Rectangle hitbox;
-    
     ArrayList<Projectile> shootList;
     ArrayList<Line> moveLimit;
     
@@ -111,6 +114,7 @@ public class Player {
     */
     public void update(GameContainer gc, StateBasedGame sbg, int delta){
         if(pause){
+
             
         }else{
         if(status.equals("Intro")){
@@ -124,9 +128,15 @@ public class Player {
             
         }
         else if(status.equals("Game")){
-           
-            aPropulsion=aPropulsionIdle;
+            for(int x=0;x<aBase.getFrameCount();x++){
+                aBase.getImage(x).setAlpha(1);
+            }
+            for(int x=0;x<aPropulsion.getFrameCount();x++){
+                aPropulsion.getImage(x).setAlpha(1);
+            }
             
+            aPropulsion=aPropulsionIdle;
+            aPropulsion.setAutoUpdate(true);
             hitbox.setLocation(location.getX(), location.getY());
 
             if(takeHit){
@@ -278,6 +288,16 @@ public class Player {
         pause=!pause;
         aBase.setAutoUpdate(false);
         aPropulsion.setAutoUpdate(false);  
+    }
+
+    
+    public void setDelta(int x){
+        this.deltaUpdate=x;
+    }
+    
+    public void setGame(GameContainer gc, StateBasedGame sbg){
+        this.gc=gc;
+        this.sbg=sbg;
     }
     
 }
