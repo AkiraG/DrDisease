@@ -37,7 +37,7 @@ public abstract class  BossConcept{
     
     public abstract void draw(Graphics g, Color c);
     
-    public abstract void update(GameContainer gc, StateBasedGame sbg, int delta);
+    public abstract void update(int delta);
     
     public boolean checkCollision(Shape c){
         return hitbox.intersects(c);

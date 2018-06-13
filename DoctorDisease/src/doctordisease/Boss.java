@@ -6,6 +6,8 @@
 package doctordisease;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
+import java.util.Iterator;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -36,6 +38,7 @@ public class Boss {
     int time,cdAtk,repeatAtk,stage;
     
     ArrayList<BossConcept> partList;
+    ArrayList<BossConcept> partListCopy;
     ArrayList<BossBlaster> blasterList;
     ArrayList<Projectile> shootList;
     
@@ -91,16 +94,17 @@ public class Boss {
          
     }
     
-    public void draw(Graphics g){
-        if(status.equals("Intro"))partList.forEach(item -> item.draw(g, Color.gray));
+    public void draw(Graphics g) throws ConcurrentModificationException {
+        if(status.equals("Intro")) partList.forEach(item -> item.draw(g, Color.gray));
+        
         else partList.forEach(item -> item.draw(g));
     }
     
-    public void update(GameContainer gc, StateBasedGame sbg, int delta){
+    public void update(int delta){
         
         time+=delta;
-        partList.forEach(item -> item.update(gc, sbg, delta));
-
+        partList.forEach(item -> item.update(delta));
+        
         if(status.equals("Intro")){
             if(core.aIntro01.isStopped()){
                 if(!partList.contains(body)){
@@ -196,6 +200,7 @@ public class Boss {
     
     public void checkCollision(ArrayList<Projectile> lista){
         if(status.equals("Game")){
+        try {
         lista.forEach(shoot -> {
             if(shoot.checkCollision(core.getHitbox())){
                 hp-=core.takeHit();
@@ -211,6 +216,9 @@ public class Boss {
                 });
             }
         });
+        } catch (ConcurrentModificationException e) {
+            System.out.println("segue o jogo");
+        }
         }
     }
     

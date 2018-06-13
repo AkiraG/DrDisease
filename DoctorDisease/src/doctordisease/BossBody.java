@@ -56,7 +56,7 @@ public class BossBody extends BossConcept {
     }
 
     @Override
-    public void update(GameContainer gc, StateBasedGame sbg, int delta) {
+    public void update(int delta) {
         
     }
     

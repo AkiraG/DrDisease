@@ -122,7 +122,7 @@ public class BossCore extends BossConcept {
     }
 
     @Override
-    public void update(GameContainer gc, StateBasedGame sbg, int delta) {
+    public void update(int delta) {
         laserList.forEach(laser -> laser.update(delta));
         laserList.removeIf(laser -> laser.checkAnimation());
         
@@ -135,7 +135,6 @@ public class BossCore extends BossConcept {
                 aBase=aIdle;
             }
         }else if(status.equals("Game")){
-            System.out.println(takeHit);
           if(takeHit){
               timeHit+=delta;
               if(timeHit>=100){

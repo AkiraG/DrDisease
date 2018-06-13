@@ -5,6 +5,8 @@
  */
 package doctordisease;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
+import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.newdawn.slick.Animation;
@@ -35,6 +37,7 @@ public class BossBlaster extends BossConcept {
     Animation aIntro,aShoot,aBase;
     
     ArrayList<Projectile> shootList;
+    ArrayList<Projectile> shootListCopy;    
     
 
     public BossBlaster(Point location, Vector2f direction,int speed) {
@@ -88,9 +91,10 @@ public class BossBlaster extends BossConcept {
     }
 
     @Override
-    public void draw(Graphics g) {
+    public void draw(Graphics g) throws ConcurrentModificationException {
         
-        shootList.forEach(bullet -> bullet.draw(g));
+        shootList.forEach(bullet -> bullet.draw(g));  
+        
         if(takeHit)aBase.draw(location.getX(),location.getY(),Color.red);
         else aBase.draw(location.getX(),location.getY());
         g.draw(hitbox);
@@ -104,7 +108,7 @@ public class BossBlaster extends BossConcept {
     }
     
     @Override
-    public void update(GameContainer gc, StateBasedGame sbg, int delta) {
+    public void update(int delta) {
         if(aIntro.isStopped())aBase=aShoot;
         
         if(takeHit){

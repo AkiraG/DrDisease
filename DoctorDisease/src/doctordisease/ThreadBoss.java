@@ -5,30 +5,53 @@
  */
 package doctordisease;
 
-import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.state.StateBasedGame;
+import java.util.ConcurrentModificationException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author saita
  */
 public class ThreadBoss extends Thread {
-    Boss boss;
-    GameContainer gc;StateBasedGame sbg;int delta;
-
-    public ThreadBoss(Boss boss, GameContainer gc, StateBasedGame sbg, int delta) {
+    
+    static Boss boss;
+    boolean stop;
+    int temp;
+    
+    public ThreadBoss(Boss boss) {
         this.boss = boss;
-        this.gc = gc;
-        this.sbg = sbg;
-        this.delta = delta;
-        System.out.println("THREAD"+this.getName());
+        System.out.println("THREAD BOSS");
     }
 
     @Override
     public void run(){
         while(true){
-        this.boss.update(gc, sbg, delta);
+            synchronized(this){
+                try {
+                    wait();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(ThreadBoss.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            try {
+            boss.update(temp);
+            boss.checkCollision(ThreadPlayer.guts.getShootList());
+            TesteState.EDGE.forEach(parede -> {
+                boss.checkBulletCollision(parede);
+            });
+            } catch (ConcurrentModificationException e ) {
+                System.out.println("Segue o jogo");
+            }
         }
     }
-    
+
+   public synchronized void putStop(boolean st) {
+        stop = st;
+        while (!stop){
+            temp = TesteState.teste;
+            notify();
+            stop = !stop;
+        }
+    }  
 }

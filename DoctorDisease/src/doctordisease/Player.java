@@ -1,6 +1,7 @@
 package doctordisease;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.newdawn.slick.*;
@@ -94,7 +95,7 @@ public class Player {
   
     }
     
-    public void update(GameContainer gc, StateBasedGame sbg, int delta){
+    public void update(int delta, Input input){
         if(status.equals("Intro")){
             timer+=delta;
             if(timer>=50 && alphaIntro<1){
@@ -117,9 +118,6 @@ public class Player {
                     takeHit=false;
                 }
             }
-
-
-            Input input = gc.getInput();
 
             if(input.isKeyDown(Input.KEY_LEFT) && !this.checkCollision(moveLimit.get(1)))
                 direction.set(direction.getX()-1,direction.getY());
@@ -184,11 +182,15 @@ public class Player {
     
     public void checkCollision(ArrayList<Projectile> shootList){
         if(status.equals("Game")){
+        try {
         shootList.forEach(shoot -> {
                     if(shoot.checkCollision(hitbox)){
                         this.takeHit(5);
                     }
             });
+        } catch (ConcurrentModificationException e) {
+            System.out.println("segue o jogo");
+        }
         }
     }
     

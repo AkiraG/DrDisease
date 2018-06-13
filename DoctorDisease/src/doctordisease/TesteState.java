@@ -6,8 +6,11 @@
 package doctordisease;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.lwjgl.LWJGLException;
+import org.lwjgl.opengl.GLContext;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -16,6 +19,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Line;
 import org.newdawn.slick.geom.Point;
 import org.newdawn.slick.geom.Vector2f;
+import org.newdawn.slick.opengl.GLUtils;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
@@ -25,6 +29,9 @@ import org.newdawn.slick.state.StateBasedGame;
  */
 public class TesteState extends BasicGameState{
     
+    static int teste;
+    static Input input;
+    
     String status;
     long t1;
     long t2;
@@ -33,7 +40,7 @@ public class TesteState extends BasicGameState{
     int cd=0;
     float angle=90;
     ArrayList<Line> EDGEmovement = new ArrayList <>();
-    ArrayList<Line> EDGE = new ArrayList<>();
+    static ArrayList<Line> EDGE = new ArrayList<>();
     int time=0;
     Image bg;
     Player guts = new Player(new Point(512,500),300);
@@ -41,6 +48,10 @@ public class TesteState extends BasicGameState{
     Boss boss = new Boss(new Point(204,0));
     
     LaserShot laser = new LaserShot(new Point(0,0),new Vector2f(0,1));
+    
+    ThreadBoss tBoss;
+    ThreadPlayer tPlayer;
+    GLContext te;
     
     public TesteState(int state){
         try {
@@ -53,6 +64,10 @@ public class TesteState extends BasicGameState{
 
     @Override
     public int getID() {
+        return 10;
+    }
+    
+    static public int getId() {
         return 10;
     }
 
@@ -75,52 +90,68 @@ public class TesteState extends BasicGameState{
         boss.setTarget(guts.getHitbox());
 
         boss.runIntro();
+        
+        tBoss = new ThreadBoss(boss);
+        try {
+            tPlayer = new ThreadPlayer(guts, container);
+        } catch (LWJGLException ex) {
+            Logger.getLogger(TesteState.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        tBoss.start();
+        tPlayer.start();
+        bg = new Image("data/image/Fase01/background-stomach.png");
     }
 
     @Override
     public void render(GameContainer container, StateBasedGame game, Graphics g) throws SlickException {
         
-        //bg.draw();
-        boss.draw(g);
-        guts.draw(g);  
-        g.drawString(Float.toString(boss.hp), 50, 50);
-        g.drawString(Float.toString(guts.hp),900,50);
+        //bg.draw(0,0);
+        try {
+        ThreadBoss.boss.draw(g);
+        ThreadPlayer.guts.draw(g);
+        } catch (ConcurrentModificationException e) {
+            System.out.println("segue o jogo");
+        }
+        g.drawString(Float.toString(ThreadBoss.boss.hp), 50, 50);
+        g.drawString(Float.toString(ThreadPlayer.guts.hp),900,50);
 
  
     }
 
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
+        teste = delta;
         if(status.equals("Intro")){
-            if(boss.checkStatus().equals("Game")){
-                guts.status="Game";
-                this.status="Game";
+            if(ThreadBoss.boss.checkStatus().equals("Game")){
+                ThreadPlayer.guts.status="Game";
+                status="Game";
             }
            
         }
         
-       if(guts.hp<=0)this.init(container, game);
+       if(ThreadPlayer.guts.hp <= 0) init(container, game);
 //        long t1 = System.currentTimeMillis();
 
 
-        boss.update(container, game, delta);
-        Input input = container.getInput();
-
-        guts.update(container, game, delta);
-        boss.checkCollision(guts.getShootList());
-        guts.checkCollision(boss.getShootList());
-        guts.checkLaserCollision(boss.getLaserList());
-        
-        EDGE.forEach(parede -> {
-           boss.checkBulletCollision(parede);
-           guts.checkBulletCollision(parede);
-               });      
-        
+        //boss.update(container, game, delta);
+        input = container.getInput();
+        tBoss.putStop(false);
+        tPlayer.putStop(false);
+        //tPlayer.putStop(false);
+        //tBoss.putStop(false);
+            //guts.update(delta, input);
+            //boss.checkCollision(guts.getShootList());
+            //guts.checkCollision(boss.getShootList());
+            //guts.checkLaserCollision(boss.getLaserList());
+            
+            //EDGE.forEach(parede -> {
+            //boss.checkBulletCollision(parede);
+            //guts.checkBulletCollision(parede);
+            //});
+            
 //        long t2 = System.currentTimeMillis();
 //        System.out.println(t2-t1);
-    
-
-        
+      
     }
 
 }
