@@ -54,8 +54,8 @@ public class Celulas extends BasicGameState {
     
     @Override
     public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
-        cellLst = new Image[]{new Image("data/image/MainMenu/bactery_purple.png"), new Image("data/image/MainMenu/platelets.png")
-        ,new Image("data/image/MainMenu/red_blood_cell.png"), new Image("data/image/MainMenu/white_blood_cell.png")};
+        cellLst = new Image[]{new Image("data/image/bactery_purple.png"), new Image("data/image/platelets.png")
+        ,new Image("data/image/red_blood_cell.png"), new Image("data/image/white_blood_cell.png")};
         posY = (int) (Math.random() * (650 - 50));
         posX = (int) (Math.random() * 1000);        
         change();
@@ -73,7 +73,7 @@ public class Celulas extends BasicGameState {
         if (posX > DoctorDisease.WIDTH){
             posX = -200;
             posY = (int) (Math.random() * (600 - 100) + 50);
-            //change();
+            change();
         }
     }
 }

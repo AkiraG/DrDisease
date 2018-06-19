@@ -17,6 +17,8 @@ public class ThreadMsc implements Runnable {
     private Music introDrop = intro;
     private Music bgMenuMusic;
     private Music bgPlayMusic;
+    private Music gameoverWin;
+    private Music gameoverLose;
     //
     final int INTRO = 0, MENU = 1, PLAY = 2;
     
@@ -55,15 +57,24 @@ public class ThreadMsc implements Runnable {
                         DoctorDisease.app.setSoundOn(false);
                     }      
                     break;
+                case 3:
+                    bgPlayMusic.stop();
+                    if("Win".equals(Fase01.status)){
+                        if(!gameoverWin.playing())gameoverWin.play();
+                    }else if("Lose".equals(Fase01.status)){
+                        if(!gameoverLose.playing())gameoverLose.play();
+                    }
             }
         }
     }
     
     public void begin() throws SlickException {
         if (t == null){ // verifica se a thread já foi criada
-            intro = new Music("/data/sound/Intro/Intro_Pre_Drop.ogg"); // instanciação das músicas
-            bgMenuMusic= new Music("/data/sound/Intro/Intro_Drop.ogg");
-            bgPlayMusic = new Music("data/sound/Fase01/fase01_Completa.ogg");
+            intro = new Music("data/sound/Intro_Pre_Drop.ogg"); // instanciação das músicas
+            bgMenuMusic= new Music("data/sound/Intro_Drop.ogg");
+            bgPlayMusic = new Music("data/sound/fase01_Completa.ogg");
+            gameoverWin = new Music("data/sound/game_over_ganhou.ogg");
+            gameoverLose = new Music("data/sound/game_over_perdeu.ogg");
             t = new Thread (this, threadName); // instanciação do obj Thread
             t.start(); // chamada do método .run() da Thread
         }

@@ -58,11 +58,11 @@ public class BossBlaster extends BossConcept {
         
         try {
             
-            shoot= new Sound("data/sound/Fase01/Slime.ogg");
-            bullet=new SpriteSheet("data/image/Fase01/bulletboss.png",40,40);
+            shoot= new Sound("data/sound/Slime.ogg");
+            bullet=new SpriteSheet("data/image/bulletboss.png",40,40);
             
-            sIntro=new SpriteSheet("data/image/Fase01/blaster-1-1-intro.png", 52, 52);
-            sShoot=new SpriteSheet("data/image/Fase01/blaster-1-1-shoot.png", 52, 52);
+            sIntro=new SpriteSheet("data/image/blaster-1-1-intro.png", 52, 52);
+            sShoot=new SpriteSheet("data/image/blaster-1-1-shoot.png", 52, 52);
             
             aIntro=new Animation(sIntro,60);
             aIntro.stopAt(aIntro.getFrameCount()-1);

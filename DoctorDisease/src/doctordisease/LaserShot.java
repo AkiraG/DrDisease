@@ -43,7 +43,7 @@ public class LaserShot {
             
         try {
             
-            sLaser = new SpriteSheet("data/image/Fase01/laser-1-1-shoot.png",700,32);
+            sLaser = new SpriteSheet("data/image/laser-1-1-shoot.png",700,32);
             
             aLaserShoot = new Animation(sLaser,0,0,0,1,false,60,true);
             aLaserShoot.stopAt(aLaserShoot.getFrameCount()-1);
@@ -100,7 +100,7 @@ public class LaserShot {
             
         try {
             
-            sLaser = new SpriteSheet("data/image/Fase01/laser-1-1-shoot.png",700,32);
+            sLaser = new SpriteSheet("data/image/laser-1-1-shoot.png",700,32);
             
             aLaserShoot = new Animation(sLaser,0,0,0,1,false,60,true);
             aLaserShoot.stopAt(aLaserShoot.getFrameCount()-1);

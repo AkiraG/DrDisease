@@ -41,9 +41,9 @@ public class GameOver extends BasicGameState {
         time=0;time2=0;
         t1=0;t2=0;
         alpha=0;
-        gameoverPT = new Image("/data/image/Fase01/gameover-pt.png");
-        gameoverENG = new Image("/data/image/Fase01/gameover-eng.png");
-        canavial = new Image("/data/image/Fase01/canavial.png");
+        gameoverPT = new Image("data/image/gameover-pt.png");
+        gameoverENG = new Image("data/image/gameover-eng.png");
+        canavial = new Image("data/image/canavial.png");
         canavial.setAlpha(alpha);
     }
 
@@ -59,7 +59,7 @@ public class GameOver extends BasicGameState {
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
         time+=delta;
         time2+=delta;
-        if(time>=5000){
+        if(time>=10000){
             time=0;
             game.getState(1).init(container, game);
             game.enterState(1,new FadeOutTransition(new Color (255,0,0)) ,new FadeInTransition(new Color (255,0,0)));

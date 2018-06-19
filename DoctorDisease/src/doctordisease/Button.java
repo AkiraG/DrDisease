@@ -39,7 +39,7 @@ public class Button {
 
     public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
         
-        buttonImg = new Image[] {new Image("/data/image/MainMenu/"+path+"1.png"), new Image("data/image/MainMenu/"+path+"2.png")};
+        buttonImg = new Image[] {new Image("data/image/"+path+"1.png"), new Image("data/image/"+path+"2.png")};
         imgButton = buttonImg[0];
         if (type == "state"){
             button = new MouseOverArea(gc, buttonImg[0], x - (buttonImg[0].getWidth()/2), y, buttonImg[0].getWidth(), buttonImg[0].getHeight(),  new ComponentListener() {            

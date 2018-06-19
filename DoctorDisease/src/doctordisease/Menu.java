@@ -57,7 +57,7 @@ public class Menu extends BasicGameState {
         
         //configurando fonte usada
         try{
-            InputStream inputStream = ResourceLoader.getResourceAsStream("/data/fonts/amiga4ever_pro2.ttf");
+            InputStream inputStream = ResourceLoader.getResourceAsStream("data/fonts/amiga4ever_pro2.ttf");
  
 			Font font = Font.createFont(Font.TRUETYPE_FONT, inputStream);
 			font = font.deriveFont(20f); // set font size
@@ -67,8 +67,8 @@ public class Menu extends BasicGameState {
                 e.printStackTrace();
                 }
 
-        btClick= new Sound("/data/sound/Menu/Main_Menu_Select.ogg");
-        btReturn= new Sound("/data/sound/Menu/Main_Menu_Back.ogg");
+        btClick= new Sound("data/sound/Main_Menu_Select.ogg");
+        btReturn= new Sound("data/sound/Main_Menu_Back.ogg");
         
         // path pra imagem, posX, posY, valor do state, som do botão - isso pra botôes que alterem o state
         btStart = new Button("bt_start_pt", 512, 500, 2, btClick, "state");
@@ -96,15 +96,15 @@ public class Menu extends BasicGameState {
             b.init(gc, sbg); // roda a lista e da o init dos botoes
         
         for (int x = 1; x <= 8; x++){
-            logoGame[(x - 1)] = new Image("data/image/MainMenu/logo_game" + x +".png");
+            logoGame[(x - 1)] = new Image("data/image/logo_game" + x +".png");
         }
         logo = new Animation(logoGame, 100, true);
         
-        background = new Image("data/image/MainMenu/background.png");
-        boxOption = new Image("data/image/MainMenu/box_options.png");
-        boxOption2 = new Image("data/image/MainMenu/box_options2.png");// box usado para creditos tamanho alterado
-        telaTutorial = new Image("data/image/MainMenu/tela_tutorialpt.png");
-        telaTutorialEng = new Image("data/image/MainMenu/tela_tutorialeng.png");
+        background = new Image("data/image/background.png");
+        boxOption = new Image("data/image/box_options.png");
+        boxOption2 = new Image("data/image/box_options2.png");// box usado para creditos tamanho alterado
+        telaTutorial = new Image("data/image/tela_tutorialpt.png");
+        telaTutorialEng = new Image("data/image/tela_tutorialeng.png");
         
         for (int x = 0 ; x < 15 ; x++){
             celulasLst[x] = new Celulas();

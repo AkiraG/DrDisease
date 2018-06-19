@@ -34,8 +34,8 @@ public class IntroState extends BasicGameState {
     public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
         //introDrop = new Music("/data/sound/Intro_Pre_Drop.ogg");
         state=0;
-        logoTeam = new Image("/data/image/intro/logo_team.png");
-        logoFatec = new Image("/data/image/intro/logo_fatec.png");
+        logoTeam = new Image("data/image/logo_team.png");
+        logoFatec = new Image("data/image/logo_fatec.png");
 //        imgIntro = new SpriteSheet("/data/image/intro/intro.png",470,320);
 //        intro= new Animation(imgIntro,130);
 //        intro.setAutoUpdate(true);

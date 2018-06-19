@@ -35,7 +35,7 @@ import org.newdawn.slick.state.transition.FadeOutTransition;
  */
 public class Fase01 extends BasicGameState implements InputProviderListener{
     
-    String status;
+    static String status;
     
     Image hp,health;
     ArrayList<Line> EDGEmovement;
@@ -70,9 +70,9 @@ public class Fase01 extends BasicGameState implements InputProviderListener{
     @Override
     public void init(GameContainer container, StateBasedGame game) throws SlickException {
         
-        hp = new Image("data/image/Fase01/hp.png");
+        hp = new Image("data/image/hp.png");
         
-        health = new Image ("data/image/Fase01/health.png");
+        health = new Image ("data/image/health.png");
         
         EDGEmovement = new ArrayList <>();
         EDGE = new ArrayList<>();
@@ -86,13 +86,13 @@ public class Fase01 extends BasicGameState implements InputProviderListener{
         boss = new Boss(new Point(204,0));
         
         
-        pausePT = new Image("/data/image/Fase01/pause-pt.png");
-        pauseENG = new Image("/data/image/Fase01/pause-eng.png");
-        boxPause = new Image("/data/image/MainMenu/box_options.png");
+        pausePT = new Image("data/image/pause-pt.png");
+        pauseENG = new Image("data/image/pause-eng.png");
+        boxPause = new Image("data/image/box_options.png");
             
-        img_quitPT=new Image[]{new Image("/data/image/Fase01/back-pause-pt1.png"),new Image("/data/image/Fase01/back-pause-pt2.png")};
-        img_quitENG = new Image[]{new Image("/data/image/Fase01/back-pause-eng1.png"),new Image("/data/image/Fase01/back-pause-eng2.png")};
-        img_menuPTENG = new Image[]{new Image("/data/image/Fase01/menu-pause-pt1.png"),new Image("/data/image/Fase01/menu-pause-pt2.png")};
+        img_quitPT=new Image[]{new Image("data/image/back-pause-pt1.png"),new Image("data/image/back-pause-pt2.png")};
+        img_quitENG = new Image[]{new Image("data/image/back-pause-eng1.png"),new Image("data/image/back-pause-eng2.png")};
+        img_menuPTENG = new Image[]{new Image("data/image/menu-pause-pt1.png"),new Image("data/image/menu-pause-pt2.png")};
         
             bt_quitPT = new MouseOverArea(container, img_quitPT[0], 682-(img_quitPT[0].getWidth()/2) , 380, img_quitPT[0].getWidth(),
             img_quitPT[0].getHeight(), new ComponentListener() {
@@ -153,7 +153,7 @@ public class Fase01 extends BasicGameState implements InputProviderListener{
         
         provider.bindCommand(new KeyControl(Input.KEY_ESCAPE), esc);
         
-        background = new Image("data/image/Fase01/background-stomach.png");
+        background = new Image("data/image/background-stomach.png");
         
         status="Intro";
 
@@ -201,7 +201,14 @@ public class Fase01 extends BasicGameState implements InputProviderListener{
 
     @Override
     public void update(GameContainer container, StateBasedGame game, int delta) throws SlickException {
-        if(guts.hp<=0 || boss.body.aIntro02.isStopped()){
+        if(guts.hp<=0){
+            status="Lose";
+            DoctorDisease.gameState=3;
+            game.getState(3).init(container, game);
+            game.enterState(3,new FadeOutTransition(new Color (0,0,0)) ,new FadeInTransition(new Color (0,0,0)));
+        }else if (boss.body.aIntro02.isStopped()){
+            DoctorDisease.gameState=3;
+            status="Win";
             game.getState(3).init(container, game);
             game.enterState(3,new FadeOutTransition(new Color (0,0,0)) ,new FadeInTransition(new Color (0,0,0)));
         }

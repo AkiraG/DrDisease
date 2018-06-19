@@ -22,15 +22,14 @@ public class DoctorDisease extends StateBasedGame {
     }
     
     public static void main(String[] args) {
-        System.setProperty("java.library.path", "libs");
-        System.setProperty("org.lwjgl.librarypath", new File("libs/natives").getAbsolutePath());
+//        System.setProperty("java.library.path", "libs");
+//        System.setProperty("org.lwjgl.librarypath", new File("libs/natives").getAbsolutePath());
         try
             {
 		app = new AppGameContainer(new DoctorDisease("Dr Disease"));
 		app.setDisplayMode(WIDTH, HEIGHT, true);
                 //app.setTargetFrameRate(FPS);
 		app.start();
-                
             }
 	catch (SlickException ex)
             {

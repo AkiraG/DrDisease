@@ -54,15 +54,15 @@ public class BossCore extends BossConcept {
         isAtk=false;
         
         try {
-            laser= new Sound("data/sound/Fase01/Laser_Full.ogg");
-            sIntro01 = new SpriteSheet("data/image/Fase01/core-1-1-intro-pt1.png", 128, 128);
-            sIntro02 = new SpriteSheet("data/image/Fase01/core-1-1-intro-pt2.png", 128, 128);
-            sIdle = new SpriteSheet("data/image/Fase01/core-1-1-idle.png", 128, 128);
-            sAtkSet = new SpriteSheet("data/image/Fase01/core-1-1-atk-set.png", 128, 128);
-            sAtkChrg = new SpriteSheet("data/image/Fase01/core-1-1-atk-charge.png", 128, 128);
-            sAtkShoot = new SpriteSheet("data/image/Fase01/core-1-1-atk-shoot.png", 128, 128);
-            sAtkCd = new SpriteSheet("data/image/Fase01/core-1-1-atk-cd.png", 128, 128);
-            sAtkReset = new SpriteSheet("data/image/Fase01/core-1-1-atk-reset.png", 128, 128);
+            laser= new Sound("data/sound/Laser_Full.ogg");
+            sIntro01 = new SpriteSheet("data/image/core-1-1-intro-pt1.png", 128, 128);
+            sIntro02 = new SpriteSheet("data/image/core-1-1-intro-pt2.png", 128, 128);
+            sIdle = new SpriteSheet("data/image/core-1-1-idle.png", 128, 128);
+            sAtkSet = new SpriteSheet("data/image/core-1-1-atk-set.png", 128, 128);
+            sAtkChrg = new SpriteSheet("data/image/core-1-1-atk-charge.png", 128, 128);
+            sAtkShoot = new SpriteSheet("data/image/core-1-1-atk-shoot.png", 128, 128);
+            sAtkCd = new SpriteSheet("data/image/core-1-1-atk-cd.png", 128, 128);
+            sAtkReset = new SpriteSheet("data/image/core-1-1-atk-reset.png", 128, 128);
             
             aIntro01= new Animation(sIntro01,60);
             aIntro01.setAutoUpdate(false);

@@ -39,9 +39,9 @@ public class BossBody extends BossConcept {
         
         try {
             
-            sBase = new SpriteSheet("/data/image/Fase01/body-1-1-intro.png",616,208);
+            sBase = new SpriteSheet("data/image/body-1-1-intro.png",616,208);
             
-            sIntro = new SpriteSheet("/data/image/Fase01/body-1-2-introt.png",616,208);
+            sIntro = new SpriteSheet("data/image/body-1-2-introt.png",616,208);
             
             aIntro= new Animation(sBase,60);
             aIntro.setAutoUpdate(false);

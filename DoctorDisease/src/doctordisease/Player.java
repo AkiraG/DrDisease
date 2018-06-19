@@ -65,10 +65,10 @@ public class Player {
         this.speed = speed;
         try {
             
-            sBase = new SpriteSheet("/data/image/Fase01/Guts-shoot-Sheet.png",44,62);
-            sPropulsion = new SpriteSheet("/data/image/Fase01/Guts-propulsion-Sheet.png",8,16);
-            sBullet = new SpriteSheet("/data/image/FAse01/bulletSheet.png",20,20);
-            bulletSound = new Sound("data/sound/Fase01/Guts_shot.ogg");
+            sBase = new SpriteSheet("data/image/Guts-shoot-Sheet.png",44,62);
+            sPropulsion = new SpriteSheet("data/image/Guts-propulsion-Sheet.png",8,16);
+            sBullet = new SpriteSheet("data/image/bulletSheet.png",20,20);
+            bulletSound = new Sound("data/sound/Guts_shot.ogg");
             
             aBase = new Animation(sBase,100);
             aBase.setAutoUpdate(false);
